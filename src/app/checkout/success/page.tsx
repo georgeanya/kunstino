@@ -76,7 +76,7 @@ export default function CheckoutSuccessPage() {
 
         <div className="text-center text-xs text-gray-600">
           {t.contactHelp.split('{contact}')[0]}
-          <Link href="/contact" className="underline hover:text-black">
+          <Link href="/contact" className="link-underline hover:text-black">
             {t.contact}
           </Link>
           {t.contactHelp.split('{contact}')[1]}

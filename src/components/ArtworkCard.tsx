@@ -16,17 +16,17 @@ export default function ArtworkCard({ artwork }: ArtworkCardProps) {
         <Image
           src={artwork.imageUrl}
           alt={artwork.title}
-          fill
           className="object-cover group-hover:opacity-90 transition-opacity duration-300"
-          sizes="(max-width: 768px) 50vw, 25vw"
+            width={260}
+        height={260}
         />
       </div>
       <div className="space-y-1">
-        <h3 className="font-medium text-sm text-black">{artwork.artistName}</h3>
-        <p className="text-sm text-gray-600 italic">
+        <h3 className="font-semibold text-sm text-black">{artwork.artistName}</h3>
+        <p className="text-xs text-black italic">
           {artwork.title}, {artwork.year}
         </p>
-        <p className="text-sm text-black">
+        <p className="text-xs md:text-sm opacity-50 text-black">
           {artwork.currency}{artwork.price.toLocaleString()}
         </p>
       </div>

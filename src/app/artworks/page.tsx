@@ -15,13 +15,12 @@ export default function ArtworksPage() {
   const paginatedArtworks = paginateItems(artworks, currentPage, itemsPerPage);
 
   return (
-    <main className="px-4 py-8 lg:px-[100px] lg:py-12">
-      <div className="mb-6 lg:mb-8">
-        <h1 className="text-xl lg:text-3xl font-medium">
-          {t.artworks} <span className="text-gray-400">/ {t.artworksCount(artworks.length)}</span>
-        </h1>
-      </div>
-
+    <main className="px-4 lg:px-25">
+      
+      <h1 className="text-[22px] lg:text-[32px]">
+        {t.artworks} <span className="text-[16px]">/ {t.artworksCount(artworks.length)}</span>
+      </h1>
+      <hr className='my-5 opacity-20'/>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         {paginatedArtworks.map((artwork) => (
           <ArtworkCard key={artwork.id} artwork={artwork} />

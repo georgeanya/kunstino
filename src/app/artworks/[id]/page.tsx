@@ -1,21 +1,22 @@
-'use client';
-
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { getArtworkById, getArtworksByArtist } from '@/lib/data';
+import { getArtworkById, getArtworksByArtist, artworks } from '@/lib/data';
 import ArtworkCard from '@/components/ArtworkCard';
-import { useLanguage } from '@/contexts/LanguageContext';
 
-interface PageProps {
-  params: {
-    id: string;
-  };
+export async function generateStaticParams() {
+  return artworks.map((artwork) => ({
+    id: artwork.id,
+  }));
 }
 
-export default function ArtworkDetailPage({ params }: PageProps) {
-  const { t } = useLanguage();
-  const artwork = getArtworkById(params.id);
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function ArtworkDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  const artwork = getArtworkById(id);
 
   if (!artwork) {
     notFound();
@@ -26,23 +27,22 @@ export default function ArtworkDetailPage({ params }: PageProps) {
     .slice(0, 4);
 
   return (
-    <main className="px-4 py-8 lg:px-[100px] lg:py-12">
-      <div className="mb-6">
-        <h1 className="text-xl lg:text-3xl font-medium">
-          {t.artworks} <span className="text-gray-400">/ {artwork.title}</span>
-        </h1>
-      </div>
-
-      <div className="lg:grid lg:grid-cols-2 lg:gap-12 mb-12 lg:mb-16">
+    <main className="px-4 lg:px-25">
+      <h1 className="text-[22px] lg:text-[32px]">
+          Artwork <span className="text-[16px]">/ {artwork.title}</span>
+      </h1>
+      <hr className='my-5 opacity-20'/>
+      <div className="lg:grid lg:grid-cols-2 lg:gap-12 mb-12 lg:mb-20">
         {/* Image Gallery */}
         <div className="mb-6 lg:mb-0">
-          <div className="relative aspect-[3/4] bg-gray-100">
+          <div className="relative aspect-3/4 bg-gray-100">
             <Image
               src={artwork.imageUrl}
               alt={artwork.title}
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         </div>
@@ -51,37 +51,39 @@ export default function ArtworkDetailPage({ params }: PageProps) {
         <div>
           <Link
             href={`/artists/${artwork.artistId}`}
-            className="text-sm lg:text-lg font-medium hover:underline block mb-2"
+            className="text-[16px] lg:text-lg link-underline block mb-3"
           >
             {artwork.artistName}
           </Link>
-          <h2 className="text-lg lg:text-2xl font-medium mb-1">
+          <h2 className="text-[22px] lg:text-[28px] font-medium mb-4.5 md:mb-6">
             {artwork.title}, {artwork.year}
           </h2>
-          <p className="text-xs lg:text-base text-gray-600 mb-1">{artwork.medium}</p>
-          <p className="text-xs lg:text-base text-gray-600 mb-4 lg:mb-6">
+          <p className="text-base lg:text-lg italic  mb-1">{artwork.medium}</p>
+          <p className="text-base lg:text-lg italic  mb-4.5 lg:mb-6">
             {artwork.dimensions.width} X {artwork.dimensions.height}{' '}
             {artwork.dimensions.unit}
           </p>
 
-          <p className="text-xl lg:text-3xl font-medium mb-4 lg:mb-6">
+          <p className="text-[28px] font-medium mb-4.5 lg:mb-6">
             {artwork.currency}{artwork.price.toLocaleString()}
           </p>
 
-          <p className="text-xs lg:text-sm text-gray-600 mb-4 lg:mb-6">
-            {t.taxesShipping}
+          <p className="text-xs leading-4 text-black mb-4 lg:mb-6">
+            Taxes and shipping included for delivery to Germany. 14 working days
+            of estimated delivery time
           </p>
 
           <Link
             href="/checkout"
-            className="block w-full bg-black text-white text-center py-3 lg:py-4 rounded-lg hover:bg-gray-800 transition-colors mb-6 lg:mb-8 font-medium text-sm"
+            className="block w-full bg-black text-white text-center py-3 lg:py-4 rounded-[40px] hover:bg-gray-800 transition-colors mb-15 lg:mb-12 font-medium text-sm"
           >
-            {t.purchase}
+            <p className='text-white'>Purchase</p>
           </Link>
 
           <div>
-            <h3 className="font-medium mb-3 text-sm lg:text-base">{t.artistNote}</h3>
-            <p className="text-xs lg:text-sm text-gray-700 leading-relaxed">
+            <h3 className="text-[22px]">Artist's note</h3>
+            <hr className='my-5 opacity-20'/>
+            <p className="text-sm text-gray-700 leading-4.75">
               {artwork.description}
             </p>
           </div>
@@ -91,10 +93,11 @@ export default function ArtworkDetailPage({ params }: PageProps) {
       {/* Other artworks by artist */}
       {otherArtworks.length > 0 && (
         <section>
-          <h2 className="text-lg lg:text-2xl font-medium mb-6 lg:mb-8">
-            {t.otherArtworksByArtist(artwork.artistName)}
+          <h2 className="text-[22px]">
+            Other artworks by {artwork.artistName}
           </h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <hr className='my-5 opacity-20'/>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-16.75">
             {otherArtworks.map((artwork) => (
               <ArtworkCard key={artwork.id} artwork={artwork} />
             ))}

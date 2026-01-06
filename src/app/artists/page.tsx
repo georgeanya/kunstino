@@ -15,14 +15,12 @@ export default function ArtistsPage() {
   const paginatedArtists = paginateItems(artists, currentPage, itemsPerPage);
 
   return (
-    <main className="px-4 py-8 lg:px-[100px] lg:py-12">
-      <div className="mb-6 lg:mb-8">
-        <h1 className="text-xl lg:text-3xl font-medium">
-          {t.artists} <span className="text-gray-400">/ {t.artistsCount(artists.length)}</span>
+    <main className="px-4 lg:px-25">
+      <h1 className="text-[22px] lg:text-[32px]">
+          {t.artists} <span className="text-[16px]">/ {t.artistsCount(artists.length)}</span>
         </h1>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      <hr className='my-5 opacity-20'/>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-16.75">
         {paginatedArtists.map((artist) => (
           <ArtistCard key={artist.id} artist={artist} />
         ))}

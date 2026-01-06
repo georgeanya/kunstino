@@ -54,7 +54,7 @@ export default function Pagination({
           key={index}
           onClick={() => typeof page === 'number' && onPageChange(page)}
           disabled={page === '...'}
-          className={`min-w-10 h-10 rounded-md text-sm font-medium transition-colors ${
+          className={`min-w-10 h-10 rounded-[50%] text-sm font-medium transition-colors ${
             page === currentPage
               ? 'bg-black text-white'
               : page === '...'
@@ -69,7 +69,7 @@ export default function Pagination({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-[50%] hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <svg
           className="w-5 h-5"
