@@ -55,10 +55,6 @@ export default function Header() {
         <div className="flex items-center justify-between px-4 h-16">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            onTouchEnd={(e) => {
-              e.preventDefault();
-              setMobileMenuOpen(!mobileMenuOpen);
-            }}
             className="p-2"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
@@ -123,10 +119,6 @@ export default function Header() {
                 <div className="w-full text-left flex items-center gap-2">
                   <button 
                     onClick={toggleSearch}
-                    onTouchEnd={(e) => {
-                      e.preventDefault();
-                      toggleSearch();
-                    }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     <Image
@@ -165,7 +157,6 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    onTouchEnd={() => setMobileMenuOpen(false)}
                     className={`block text-[16px] font-serif ${
                       isActive(link.href) ? 'text-black' : 'text-gray-700'
                     }`}
