@@ -14,9 +14,9 @@ export default function Footer() {
     <footer className=" mt-20">
       <div className="px-4 lg:px-25 bg-[#F2F2F2] pt-20.5 pb-20">
         {/* Logo */}
-        <div className="flex justify-center mb-4">
-          <Link href="/" className="">
-            <Image
+        <div className="flex justify-center  mb-4">
+          <Link href="/" className="w-21.5 md:w-27.5">
+            <img
               src={logo}
               alt="KUNSTiNO"
               width={110}

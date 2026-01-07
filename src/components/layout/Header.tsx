@@ -62,7 +62,7 @@ export default function Header() {
           </button>
           
           <Link href="/" className="text-xl font-serif tracking-wider">
-            <Image
+            <img
               src={logo}
               alt="KUNSTiNO"
               width={86}
@@ -71,7 +71,7 @@ export default function Header() {
           </Link>
 
           <div className="flex items-center ">
-            <Image
+            <img
               src={globe}
               alt="Language"
               width={16}
@@ -95,7 +95,7 @@ export default function Header() {
                 <div className='flex gap-4 justify-between w-full'>
                 <div className="w-full  text-left flex items-center gap-2">
                   <button onClick={toggleSearch}>
-                    <Image
+                    <img
                     src={search}
                     alt="Search"
                     width={20}
@@ -115,7 +115,7 @@ export default function Header() {
                 </button>
               </form>
                <div className="w-full py-2 flex items-end justify-end">
-                <Image
+                <img
                   src={mail}
                   alt="Mail"
                   width={20}

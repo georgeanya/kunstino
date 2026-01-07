@@ -18,7 +18,7 @@ export interface Artwork {
   dimensions: {
     width: number;
     height: number;
-    unit: "in" | "cm";
+    unit: "in" | "cm" | "px" | "degree";
   };
   price: number;
   currency: string;
