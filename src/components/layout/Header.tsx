@@ -72,22 +72,25 @@ export default function Header() {
           </button>
           
           <Link href="/" className="text-xl font-serif tracking-wider">
-            <img
-              src={logo.src}
+            <Image
+              src={logo}
               alt="KUNSTiNO"
               width={86}
               height={23}
+              priority
+              quality={100}
             />
           </Link>
 
-          
+          {/* Safari-compatible language selector */}
           <div className="flex items-center relative">
-            <img
-              src={globe.src}
+            <Image
+              src={globe}
               alt="Language"
               width={16}
               height={16}
               className="pointer-events-none absolute left-0 z-10"
+              quality={100}
             />
             <select
               value={language.toUpperCase()}
@@ -120,11 +123,12 @@ export default function Header() {
                     }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
-                    <img
-                      src={search.src}
+                    <Image
+                      src={search}
                       alt="Search"
                       width={20}
                       height={20}
+                      quality={100}
                     />
                   </button>
                 </div>
@@ -140,11 +144,12 @@ export default function Header() {
                   </button>
                 </form>
                 <div className="w-full py-2 flex items-end justify-end">
-                  <img
-                    src={mail.src}
+                  <Image
+                    src={mail}
                     alt="Mail"
                     width={20}
                     height={20}
+                    quality={100}
                   />
                 </div>
               </div>

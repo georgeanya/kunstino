@@ -16,11 +16,12 @@ export default function Footer() {
         {/* Logo */}
         <div className="flex justify-center  mb-4">
           <Link href="/" className="w-21.5 md:w-27.5">
-            <img
+            <Image
               src={logo.src}
               alt="KUNSTiNO"
               width={110}
               height={18}
+              quality={100}
             />
           </Link>
         </div>
