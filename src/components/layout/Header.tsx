@@ -111,7 +111,13 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="h-vh border-gray-200 bg-white">
+          <div 
+            className="fixed inset-x-0 top-16 bottom-0 bg-white overflow-y-auto z-40"
+            style={{
+              height: 'calc(100vh - 64px)',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
             <div className="px-4 py-4">
               <div className='flex gap-4 justify-between w-full'>
                 <div className="w-full text-left flex items-center gap-2">
