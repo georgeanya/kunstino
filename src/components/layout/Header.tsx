@@ -108,13 +108,58 @@ export default function Header() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div 
-            className="fixed inset-x-0 top-16 bottom-0 bg-white overflow-y-auto z-40"
-            style={{
-              height: 'calc(100vh - 64px)',
-              WebkitOverflowScrolling: 'touch'
-            }}
+            className="fixed inset-0 bg-white z-40"
           >
-            <div className="px-4 py-4">
+            <div className="flex items-center justify-between px-4 h-16">
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              <Link href="/" className="text-xl font-serif tracking-wider">
+                <Image
+                  src={logo}
+                  alt="KUNSTiNO"
+                  width={86}
+                  height={23}
+                  priority
+                  quality={100}
+                />
+              </Link>
+
+              {/* Safari-compatible language selector */}
+              <div className="flex items-center relative">
+                <Image
+                  src={globe}
+                  alt="Language"
+                  width={16}
+                  height={16}
+                  className="pointer-events-none absolute left-0 z-10"
+                  quality={100}
+                />
+                <select
+                  value={language.toUpperCase()}
+                  onChange={handleLanguageChange}
+                  className="appearance-none bg-transparent border-none text-xs font-light pl-5 pr-1 cursor-pointer focus:outline-none"
+                  style={{ 
+                    WebkitTapHighlightColor: 'transparent',
+                    touchAction: 'manipulation',
+                    minHeight: '44px',
+                    minWidth: '44px',
+                  }}
+                >
+                  <option value="EN">EN</option>
+                  <option value="DE">DE</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="px-4 py-4 overflow-y-auto" style={{ height: 'calc(100vh - 64px)' }}>
               <div className='flex gap-4 justify-between w-full'>
                 <div className="w-full text-left flex items-center gap-2">
                   <button 
