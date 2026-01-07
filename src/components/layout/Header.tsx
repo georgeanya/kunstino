@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Language } from '@/lib/translations';
 import globe from '../../../public/icons/world.svg';
@@ -18,7 +18,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
-  
   const navLinks = [
     { href: '/artworks', label: t?.artworks || 'Artworks' },
     { href: '/artists', label: t?.artists || 'Artists' },
@@ -32,6 +31,7 @@ export default function Header() {
     console.log('Search:', searchQuery);
   };
 
+  // Handle language change for all browsers
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value.toLowerCase();
     if (lang === 'en' || lang === 'de') {
@@ -43,6 +43,11 @@ export default function Header() {
     setShowMobileSearch(!showMobileSearch);
   };
 
+  // Close mobile menu when language changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [language]);
+
   return (
     <header className="bg-white sticky top-0 z-50">
       {/* Mobile Header */}
@@ -50,7 +55,12 @@ export default function Header() {
         <div className="flex items-center justify-between px-4 h-16">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
             className="p-2"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -70,17 +80,25 @@ export default function Header() {
             />
           </Link>
 
-          <div className="flex items-center ">
+          
+          <div className="flex items-center relative">
             <img
               src={globe.src}
               alt="Language"
               width={16}
               height={16}
+              className="pointer-events-none absolute left-0 z-10"
             />
             <select
               value={language.toUpperCase()}
               onChange={handleLanguageChange}
-              className="text-xs font-light border-none bg-transparent cursor-pointer focus:outline-none"
+              className="appearance-none bg-transparent border-none text-xs font-light pl-5 pr-1 cursor-pointer focus:outline-none"
+              style={{ 
+                WebkitTapHighlightColor: 'transparent',
+                touchAction: 'manipulation',
+                minHeight: '44px',
+                minWidth: '44px',
+              }}
             >
               <option value="EN">EN</option>
               <option value="DE">DE</option>
@@ -92,53 +110,61 @@ export default function Header() {
         {mobileMenuOpen && (
           <div className="h-vh border-gray-200 bg-white">
             <div className="px-4 py-4">
-                <div className='flex gap-4 justify-between w-full'>
-                <div className="w-full  text-left flex items-center gap-2">
-                  <button onClick={toggleSearch}>
+              <div className='flex gap-4 justify-between w-full'>
+                <div className="w-full text-left flex items-center gap-2">
+                  <button 
+                    onClick={toggleSearch}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      toggleSearch();
+                    }}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                  >
                     <img
-                    src={search.src}
-                    alt="Search"
-                    width={20}
-                    height={20}
-                  />
+                      src={search.src}
+                      alt="Search"
+                      width={20}
+                      height={20}
+                    />
                   </button>
                 </div>
                 <form onSubmit={handleSearch} className="">
-                <button>
+                  <button>
                     <input
-                  type="text"
-                  placeholder={t.searchPlaceholder}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-67.5 h-9 px-2 py-2 bg-[#F2F2F2] rounded-[3px] text-sm ${showMobileSearch ? 'opacity-100' : 'opacity-0'} focus:outline-none focus:ring-1 focus:ring-black`}
-                />
-                </button>
-              </form>
-               <div className="w-full py-2 flex items-end justify-end">
-                <img
-                  src={mail.src}
-                  alt="Mail"
-                  width={20}
-                  height={20}
-                />
-            </div>
+                      type="text"
+                      placeholder={t?.searchPlaceholder || 'Search artworks, artists...'}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className={`w-67.5 h-9 px-2 py-2 bg-[#F2F2F2] rounded-[3px] text-sm ${showMobileSearch ? 'opacity-100' : 'opacity-0'} focus:outline-none focus:ring-1 focus:ring-black`}
+                    />
+                  </button>
+                </form>
+                <div className="w-full py-2 flex items-end justify-end">
+                  <img
+                    src={mail.src}
+                    alt="Mail"
+                    width={20}
+                    height={20}
+                  />
                 </div>
+              </div>
               <nav className="space-y-8 mt-5">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
+                    onTouchEnd={() => setMobileMenuOpen(false)}
                     className={`block text-[16px] font-serif ${
                       isActive(link.href) ? 'text-black' : 'text-gray-700'
                     }`}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     {link.label}
                   </Link>
                 ))}
               </nav>
             </div>
-           
           </div>
         )}
       </div>
@@ -154,7 +180,7 @@ export default function Header() {
                 </svg>
                 <input
                   type="text"
-                  placeholder={t.search}
+                  placeholder={t?.search || 'Search artworks, artists...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-9 w-45 pl-9 pr-4 py-2 bg-[#F2F2F2] border-none rounded-[3px] text-sm text-[#000000] focus:outline-none focus:ring-1 placeholder:text-[#000000] placeholder:font-light placeholder:text-xs"
@@ -183,7 +209,7 @@ export default function Header() {
                 />
               </button>
               <div className="flex items-center gap-l-2">
-                 <Image
+                <Image
                   src={globe}
                   alt="Language"
                   width={16}
