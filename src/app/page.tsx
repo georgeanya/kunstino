@@ -151,7 +151,7 @@ export default function HomePage() {
         {/* Artworks Section */}
         <section className="pt-10">
           <div className="flex justify-between items-center">
-            <h2 className="ttext-[22px] font-medium">{t.artworks}</h2>
+            <h2 className="ttext-[22px] font-serif">{t.artworks}</h2>
             <Link
               href="/artworks"
               className="text-xs lg:text-[16px] text-gray-600 hover:text-black transition-colors link-underline"
@@ -170,7 +170,7 @@ export default function HomePage() {
         {/* Artists Section */}
         <section className="pt-15 pb-20">
           <div className="flex justify-between items-center mb-6 lg:mb-8">
-            <h2 className="text-[22px] font-medium">{t.artists}</h2>
+            <h2 className="text-[22px] font-serif">{t.artists}</h2>
             <Link
               href="/artists"
               className="text-xs lg:text-[16px] text-gray-600 hover:text-black transition-colors link-underline"

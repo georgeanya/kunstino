@@ -8,6 +8,7 @@ import { Language } from '@/lib/translations';
 import globe from '../../../public/icons/world.svg';
 import mail from '../../../public/icons/mail.svg';
 import search from '../../../public/icons/search.svg';
+import logo from '../../../public/assets/KUNSTiNO.svg';
 import Image from 'next/image';
 
 export default function Header() {
@@ -15,6 +16,7 @@ export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   
   const navLinks = [
@@ -37,6 +39,10 @@ export default function Header() {
     }
   };
 
+  const toggleSearch = () => {
+    setShowMobileSearch(!showMobileSearch);
+  };
+
   return (
     <header className="bg-white sticky top-0 z-50">
       {/* Mobile Header */}
@@ -56,7 +62,12 @@ export default function Header() {
           </button>
           
           <Link href="/" className="text-xl font-serif tracking-wider">
-            KUNSTiNO
+            <Image
+              src={logo}
+              alt="KUNSTiNO"
+              width={86}
+              height={23}
+            />
           </Link>
 
           <div className="flex items-center ">
@@ -83,21 +94,25 @@ export default function Header() {
             <div className="px-4 py-4">
                 <div className='flex gap-4 justify-between w-full'>
                 <div className="w-full  text-left flex items-center gap-2">
-                  <Image
+                  <button onClick={toggleSearch}>
+                    <Image
                     src={search}
                     alt="Search"
                     width={20}
                     height={20}
                   />
+                  </button>
                 </div>
                 <form onSubmit={handleSearch} className="">
-                <input
+                <button>
+                    <input
                   type="text"
                   placeholder={t.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-67.5 h-9 px-2 py-2 bg-[#F2F2F2] rounded-[3px] text-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  className={`w-67.5 h-9 px-2 py-2 bg-[#F2F2F2] rounded-[3px] text-sm ${showMobileSearch ? 'opacity-100' : 'opacity-0'} focus:outline-none focus:ring-1 focus:ring-black`}
                 />
+                </button>
               </form>
                <div className="w-full py-2 flex items-end justify-end">
                 <Image
@@ -149,7 +164,12 @@ export default function Header() {
 
             <div className="flex-2 flex justify-center">
               <Link href="/" className="text-2xl font-serif tracking-wider">
-                KUNSTiNO
+                <Image
+                  src={logo}
+                  alt="KUNSTiNO"
+                  width={110}
+                  height={18}
+                />
               </Link>
             </div>
 

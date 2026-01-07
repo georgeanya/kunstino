@@ -17,21 +17,15 @@ export default function CheckoutSuccessPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-12">
+    <main className="flex items-center justify-center px-4">
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-serif tracking-wider">
-            KUNSTiNO
-          </Link>
-        </div>
-
-        <h1 className="text-2xl lg:text-3xl font-serif text-center mb-8">
+        <h1 className="text-2xl lg:text-[32px] font-serif mt-19 md:mt-0 text-center mb-8">
           {t.thankYouOrder}
         </h1>
 
-        <div className="bg-[#F2F2F2] p-6 rounded-lg mb-8">
-          <div className="flex gap-4 mb-6">
-            <div className="relative w-24 h-32 bg-gray-200 flex-shrink-0 rounded overflow-hidden">
+        <div className="bg-[#F2F2F2] p-5 rounded-lg mb-8 md:mb-10">
+          <div className="flex gap-4">
+            <div className="relative w-24 h-32 bg-gray-200 shrink-0 rounded overflow-hidden">
               <Image
                 src={artwork.imageUrl}
                 alt={artwork.title}
@@ -40,41 +34,41 @@ export default function CheckoutSuccessPage() {
               />
             </div>
             <div>
-              <h3 className="font-medium mb-1">{artwork.artist}</h3>
-              <p className="text-sm text-gray-600 italic mb-2">
+              <h3 className=" mb-1 md:text-base text-sm">{artwork.artist}</h3>
+              <p className="md:text-base text-sm text-black font-light italic mb-4">
                 {artwork.title}, {artwork.year}
               </p>
-              <p className="text-sm text-gray-600">{artwork.medium}</p>
-              <p className="text-sm text-gray-600">{artwork.dimensions}</p>
+              <p className="md:text-sm text-xs text-black font-light">{artwork.medium}</p>
+              <p className="md:text-sm text-xs text-black font-light">{artwork.dimensions}</p>
             </div>
           </div>
         </div>
 
         <div className="text-center mb-8">
-          <p className="text-sm text-gray-700 mb-6">
+          <p className="text-sm md:text-base text-black mb-6">
             {t.orderPlaced}
           </p>
-
-          <div className="bg-white border border-gray-200 rounded-lg p-6 text-left mb-6">
-            <ul className="space-y-2 text-sm">
+            <hr className='mb-6 mt-8 opacity-20'/>
+          <div className="bg-white text-left mb-6">
+            <ul className="space-y-2 text-sm md:text-base list-disc pl-5 md:pl-6">
               <li>
-                <span className="font-medium">{t.bankName}:</span> Deutsche Bank
+                <span className="">{t.bankName}:</span> Deutsche Bank
               </li>
               <li>
-                <span className="font-medium">{t.accountName}:</span> Kunstino UG
+                <span className="">{t.accountName}:</span> Kunstino UG
               </li>
               <li>
-                <span className="font-medium">{t.accountNumber}:</span> 3537783483
+                <span className="">{t.accountNumber}:</span> 3537783483
               </li>
             </ul>
           </div>
-
-          <p className="text-xs text-gray-600">
+            <hr className='my-6 md:mb-8 opacity-20'/>
+          <p className="text-sm md:text-base text-black">
             {t.paymentDeadline}
           </p>
         </div>
 
-        <div className="text-center text-xs text-gray-600">
+        <div className="text-center mt-10 md:mt-20 text-xs text-black">
           {t.contactHelp.split('{contact}')[0]}
           <Link href="/contact" className="link-underline hover:text-black">
             {t.contact}

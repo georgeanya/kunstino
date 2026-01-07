@@ -26,8 +26,8 @@ export default async function ArtistDetailPage({ params }: PageProps) {
 
   return (
     <main className="px-4 lg:px-25">
-      <h1 className="text-[22px] lg:text-[32px]">
-          Artist <span className="text-[16px]">/ {artist.name}</span>
+      <h1 className="text-[22px] font-serif font-normal lg:text-[32px]">
+          Artist <span className="text-[16px] font-sans">/ {artist.name}</span>
       </h1>
       <hr className='my-5 opacity-20'/>
       <div className="lg:flex lg:gap-12 mb-12 lg:mb-20">

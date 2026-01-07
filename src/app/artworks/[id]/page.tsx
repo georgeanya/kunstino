@@ -28,8 +28,8 @@ export default async function ArtworkDetailPage({ params }: PageProps) {
 
   return (
     <main className="px-4 lg:px-25">
-      <h1 className="text-[22px] lg:text-[32px]">
-          Artwork <span className="text-[16px]">/ {artwork.title}</span>
+      <h1 className="text-[22px] font-serif font-normal lg:text-[32px]">
+          Artwork <span className="text-[16px] font-sans">/ {artwork.title}</span>
       </h1>
       <hr className='my-5 opacity-20'/>
       <div className="lg:grid lg:grid-cols-2 lg:gap-12 mb-12 lg:mb-20">

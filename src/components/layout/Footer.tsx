@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import futureSAX from '../../../public/assets/futureSAX.svg';
 import Image from 'next/image';
+import logo from '../../../public/assets/KUNSTiNO.svg';
 
 
 export default function Footer() {
@@ -13,9 +14,14 @@ export default function Footer() {
     <footer className=" mt-20">
       <div className="px-4 lg:px-25 bg-[#F2F2F2] pt-20.5 pb-20">
         {/* Logo */}
-        <div className="text-center mb-4">
-          <Link href="/" className="text-2xl font-serif tracking-wider">
-            KUNSTiNO
+        <div className="flex justify-center mb-4">
+          <Link href="/" className="">
+            <Image
+              src={logo}
+              alt="KUNSTiNO"
+              width={110}
+              height={18}
+            />
           </Link>
         </div>
 

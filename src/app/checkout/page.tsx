@@ -49,16 +49,14 @@ export default function CheckoutPage() {
   const total = subtotal + shippingFee + vat;
 
   return (
-    <main className="px-4 py-8 lg:px-[100px] lg:py-12">
-      <div className="mb-6 lg:mb-8">
-        <h1 className="text-xl lg:text-3xl font-medium">
-          {t.checkout} <span className="text-gray-400">&gt; {t.confirmation}</span>
+    <main className="px-4 lg:px-25">
+        <h1 className="text-[22px] font-serif font-normal lg:text-[32px]">
+          {t.checkout} <span className="text-[16px] font-sans">&gt; {t.confirmation}</span>
         </h1>
-      </div>
-
-      <div className="lg:grid lg:grid-cols-2 lg:gap-12">
+        <hr className='my-5 opacity-20'/>
+      <div className="lg:flex lg:gap-12">
         {/* Form */}
-        <div className="mb-8 lg:mb-0">
+        <div className="mb-10 lg:mb-0 w-full">
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="email"
@@ -66,7 +64,7 @@ export default function CheckoutPage() {
               placeholder={t.emailAddress}
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+              className="w-full px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
               required
             />
 
@@ -77,7 +75,7 @@ export default function CheckoutPage() {
                 placeholder={t.firstName}
                 value={formData.firstName}
                 onChange={handleChange}
-                className="px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+                className="px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
                 required
               />
               <input
@@ -86,7 +84,7 @@ export default function CheckoutPage() {
                 placeholder={t.lastName}
                 value={formData.lastName}
                 onChange={handleChange}
-                className="px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+                className="px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
                 required
               />
             </div>
@@ -95,7 +93,7 @@ export default function CheckoutPage() {
               name="country"
               value={formData.country}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm text-gray-700"
+              className="w-full px-4 py-3 bg-[#F0F0F0] text-black placeholder:text-gray-500 font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
               required
             >
               <option value="">{t.country}</option>
@@ -111,7 +109,7 @@ export default function CheckoutPage() {
               placeholder={t.street}
               value={formData.street}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+              className="w-full px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
               required
             />
 
@@ -121,7 +119,7 @@ export default function CheckoutPage() {
               placeholder={t.additionalStreet}
               value={formData.additionalStreet}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+              className="w-full px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
             />
 
             <div className="grid grid-cols-2 gap-4">
@@ -131,7 +129,7 @@ export default function CheckoutPage() {
                 placeholder={t.city}
                 value={formData.city}
                 onChange={handleChange}
-                className="px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+                className="px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
                 required
               />
               <input
@@ -140,7 +138,7 @@ export default function CheckoutPage() {
                 placeholder={t.zipCode}
                 value={formData.zipCode}
                 onChange={handleChange}
-                className="px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+                className="px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
                 required
               />
             </div>
@@ -151,24 +149,19 @@ export default function CheckoutPage() {
               placeholder={t.state}
               value={formData.state}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-[#F2F2F2] border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm"
+              className="w-full px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
               required
             />
 
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-3 lg:py-4 rounded-lg hover:bg-gray-800 transition-colors mt-6 font-medium text-sm"
-            >
-              {t.saveAndContinue}
-            </button>
+            
           </form>
         </div>
 
         {/* Order Summary */}
-        <div>
+        <div className='w-full max-w-112.5'>
           <div className="bg-white rounded-lg mb-6">
             <div className="flex gap-4">
-              <div className="relative w-20 h-28 lg:w-24 lg:h-32 bg-gray-200 flex-shrink-0 rounded overflow-hidden">
+              <div className="relative w-20 h-28 lg:w-24 lg:h-32 bg-gray-200 shrink-0 rounded overflow-hidden">
                 <Image
                   src={artwork.imageUrl}
                   alt={artwork.title}
@@ -177,39 +170,48 @@ export default function CheckoutPage() {
                 />
               </div>
               <div>
-                <h3 className="font-medium text-sm mb-1">
+                <h3 className="text-base mb-1">
                   {artwork.artist}
                 </h3>
-                <p className="text-xs text-gray-600 italic mb-2">
+                <p className="text-base text-black font-light italic mb-2">
                   {artwork.title}, {artwork.year}
                 </p>
-                <p className="text-xs text-gray-600">{artwork.medium}</p>
-                <p className="text-xs text-gray-600">{artwork.dimensions}</p>
+                <p className="text-sm text-black font-light">{artwork.medium}</p>
+                <p className="text-sm text-black font-light">{artwork.dimensions}</p>
               </div>
             </div>
           </div>
-
-          <div className="space-y-3 mb-6">
+          <hr className='mb-5 mt-6 opacity-20'/>
+          <div className="space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">{t.subtotal}</span>
-              <span className="font-medium">€{subtotal.toLocaleString()}</span>
+              <span className="">{t.subtotal}</span>
+              <span className="">€{subtotal.toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">{t.shippingFee}</span>
-              <span className="font-medium">€{shippingFee}</span>
+              <span className="">{t.shippingFee}</span>
+              <span className="">€{shippingFee}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">{t.vat}</span>
-              <span className="font-medium">€{vat}</span>
+              <span className="">{t.vat}</span>
+              <span className="">€{vat}</span>
             </div>
-            <div className="border-t pt-3 flex justify-between font-medium text-base">
+            <div className="flex justify-between font-semibold text-sm">
               <span>{t.total}</span>
               <span>€{total.toLocaleString()}</span>
             </div>
+            <hr className='my-5 opacity-20'/>
           </div>
         </div>
+       
       </div>
-
+        <div className='md:mt-20 mt-10 flex items-center justify-center'>
+            <button
+            type="submit"
+            className="w-full max-w-100 bg-black text-white py-3 lg:py-4 rounded-[40px] transition-colors text-sm"
+        >
+            {t.saveAndContinue}
+        </button>
+        </div>
       <div className="text-center mt-8 lg:mt-12 text-xs text-gray-600">
         {t.contactHelp.split('{contact}')[0]}
         <Link href="/contact" className="link-underline hover:text-black">
