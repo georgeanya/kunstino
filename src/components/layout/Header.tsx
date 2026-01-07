@@ -5,10 +5,11 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Language } from '@/lib/translations';
-import Globe from '../../../public/icons/world.svg';
-import Mail from '../../../public/icons/mail.svg';
-import Search from '../../../public/icons/search.svg';
-import Logo from '../../../public/assets/KUNSTiNO.svg';
+import globe from '../../../public/icons/world.svg';
+import mail from '../../../public/icons/mail.svg';
+import search from '../../../public/icons/search.svg';
+import logo from '../../../public/assets/KUNSTiNO.svg';
+import Image from 'next/image';
 
 export default function Header() {
   const pathname = usePathname();
@@ -71,15 +72,25 @@ export default function Header() {
           </button>
           
           <Link href="/" className="text-xl font-serif tracking-wider">
-            <Logo width={86} height={23} className="w-[86px] h-[23px]" />
+            <Image
+              src={logo}
+              alt="KUNSTiNO"
+              width={86}
+              height={23}
+              priority
+              quality={100}
+            />
           </Link>
 
           {/* Safari-compatible language selector */}
           <div className="flex items-center relative">
-            <Globe 
-              width={16} 
-              height={16} 
-              className="pointer-events-none absolute left-0 z-10 w-4 h-4"
+            <Image
+              src={globe}
+              alt="Language"
+              width={16}
+              height={16}
+              className="pointer-events-none absolute left-0 z-10"
+              quality={100}
             />
             <select
               value={language.toUpperCase()}
@@ -112,7 +123,13 @@ export default function Header() {
                     }}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
-                    <Search width={20} height={20} className="w-5 h-5" />
+                    <Image
+                      src={search}
+                      alt="Search"
+                      width={20}
+                      height={20}
+                      quality={100}
+                    />
                   </button>
                 </div>
                 <form onSubmit={handleSearch} className="">
@@ -127,7 +144,13 @@ export default function Header() {
                   </button>
                 </form>
                 <div className="w-full py-2 flex items-end justify-end">
-                  <Mail width={20} height={20} className="w-5 h-5" />
+                  <Image
+                    src={mail}
+                    alt="Mail"
+                    width={20}
+                    height={20}
+                    quality={100}
+                  />
                 </div>
               </div>
               <nav className="space-y-8 mt-5">
@@ -172,16 +195,31 @@ export default function Header() {
 
             <div className="flex-2 flex justify-center">
               <Link href="/" className="text-2xl font-serif tracking-wider">
-                <Logo width={110} height={18} className="w-[110px] h-[18px]" />
+                <Image
+                  src={logo}
+                  alt="KUNSTiNO"
+                  width={110}
+                  height={18}
+                />
               </Link>
             </div>
 
             <div className="flex-1 flex justify-end items-center gap-4">
               <button className="p-2 hover:bg-gray-50 rounded-md transition-colors">
-                <Mail width={16} height={16} className="w-4 h-4" />
+                <Image
+                  src={mail}
+                  alt="Search"
+                  width={16}
+                  height={16}
+                />
               </button>
               <div className="flex items-center gap-l-2">
-                <Globe width={16} height={16} className="w-4 h-4" />
+                <Image
+                  src={globe}
+                  alt="Language"
+                  width={16}
+                  height={16}
+                />
                 <select
                   value={language.toUpperCase()}
                   onChange={handleLanguageChange}
