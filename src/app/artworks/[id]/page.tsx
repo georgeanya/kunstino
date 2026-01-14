@@ -74,22 +74,13 @@ export default async function ArtworkDetailPage({ params }: PageProps) {
               {artwork.price.toLocaleString()}
             </p>
 
-            {/* Availability */}
-            <div className="mb-4.5 lg:mb-6">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                artwork.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
-                {artwork.available ? 'Available' : 'Sold'}
-              </span>
-            </div>
-
             <p className="text-xs leading-4 text-black mb-4 lg:mb-6">
               Taxes and shipping included for delivery to Germany. 14 working days
               of estimated delivery time
             </p>
 
             <Link
-              href={`/checkout?artworkId=${artwork.id}`}
+              href={`/checkout/${artwork.id}`}  
               className={`block w-full text-center py-3 lg:py-4 rounded-[40px] mb-15 lg:mb-12 font-medium text-sm transition-colors ${
                 artwork.available 
                   ? 'bg-black text-white hover:bg-gray-800' 

@@ -3,17 +3,18 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation'; // Changed from useSearchParams
+import { createUser, createOrder } from '@/lib/api/user';
 import { getArtworkById, transformArtworkFromAPI } from '@/lib/api/artworks';
-import { createUser, createOrder } from '@/lib/api/user'; 
 import { CheckoutFormData } from '@/lib/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Artwork } from '@/lib/types';
 
 export default function CheckoutPage() {
   const { t } = useLanguage();
-  const searchParams = useSearchParams();
-  const artworkId = searchParams.get('artworkId');
+  const params = useParams(); // Get route parameters
+  const router = useRouter(); // For navigation
+  const artworkId = params?.id as string; // Get the id from route params
   
   const [formData, setFormData] = useState<CheckoutFormData>({
     email: '',
@@ -29,30 +30,29 @@ export default function CheckoutPage() {
   const [artwork, setArtwork] = useState<Artwork | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [step, setStep] = useState<'form' | 'processing' | 'success'>('form');
+  const [step, setStep] = useState<'loading' | 'form' | 'processing' | 'success'>('loading');
   const [createdUserId, setCreatedUserId] = useState<string | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
-  const [loadingArtwork, setLoadingArtwork] = useState(true);
 
   // Fetch artwork data on component mount
   useEffect(() => {
     async function fetchArtwork() {
       if (!artworkId) {
         setSubmitError('No artwork selected. Please go back and select an artwork.');
-        setLoadingArtwork(false);
+        setStep('form');
         return;
       }
 
       try {
-        setLoadingArtwork(true);
+        setStep('loading');
         const apiArtwork = await getArtworkById(artworkId);
         const transformedArtwork = transformArtworkFromAPI(apiArtwork);
         setArtwork(transformedArtwork);
+        setStep('form');
       } catch (error) {
         console.error('Failed to fetch artwork:', error);
         setSubmitError('Failed to load artwork details. Please try again.');
-      } finally {
-        setLoadingArtwork(false);
+        setStep('form');
       }
     }
 
@@ -120,7 +120,7 @@ export default function CheckoutPage() {
           artwork_id: artwork.id,
           quantity: 1
         }],
-        payment_method: 'bank_transfer',
+        payment_method: 'bank_transfer' as const,
         shipping_address: {
           street: formData.street,
           city: formData.city,
@@ -155,17 +155,30 @@ export default function CheckoutPage() {
   const vat = 12;
   const total = subtotal + shippingFee + vat;
 
-  // Render different states
+  // Spinner Loader Component
+  const SpinnerLoader = () => (
+    <div className="flex flex-col items-center justify-center min-h-[60vh]">
+    <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
+  </div>
+  );
+
+  // Processing Step
   const renderProcessingStep = () => (
-    <div className="text-center py-20">
-      <div className="mb-6">
-        <div className="w-16 h-16 border-4 border-t-black border-gray-300 rounded-full animate-spin mx-auto mb-4"></div>
-        <h2 className="text-2xl font-semibold mb-2">Processing Your Order</h2>
-        <p className="text-gray-600">Please wait while we create your account and process your order...</p>
+    <div className="flex flex-col items-center justify-center min-h-[60vh]">
+      <div className="relative">
+        <div className="w-16 h-16 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-8 h-8 bg-black rounded-full"></div>
+        </div>
       </div>
+      <h2 className="text-2xl font-semibold mb-2 mt-4">Processing Your Order</h2>
+      <p className="text-gray-600 text-center max-w-md">
+        Please wait while we create your account and process your order...
+      </p>
     </div>
   );
 
+  // Success Step
   const renderSuccessStep = () => (
     <div className="text-center py-10">
       <div className="mb-6">
@@ -209,7 +222,7 @@ export default function CheckoutPage() {
 
         <div className="space-y-3">
           <button
-            onClick={() => window.location.href = '/'}
+            onClick={() => router.push('/')}
             className="bg-black text-white py-3 px-8 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Continue Shopping
@@ -223,22 +236,18 @@ export default function CheckoutPage() {
     </div>
   );
 
+  // Form Step
   const renderFormStep = () => {
-    if (loadingArtwork) {
-      return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-    <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
-  </div>
-      );
-    }
-
     if (!artwork) {
       return (
         <div className="text-center py-20">
           <div className="text-red-600 mb-4">Artwork not found</div>
-          <Link href="/artworks" className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition-colors">
+          <button
+            onClick={() => router.push('/artworks')}
+            className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition-colors"
+          >
             Browse Artworks
-          </Link>
+          </button>
         </div>
       );
     }
@@ -455,6 +464,7 @@ export default function CheckoutPage() {
       </h1>
       <hr className='my-5 opacity-20'/>
       
+      {step === 'loading' && <SpinnerLoader />}
       {step === 'processing' && renderProcessingStep()}
       {step === 'success' && renderSuccessStep()}
       {step === 'form' && renderFormStep()}
