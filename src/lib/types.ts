@@ -11,7 +11,7 @@ export interface Artist {
 export interface Artwork {
   id: string;
   title: string;
-  artistId: string;
+  artistId?: any;
   artistName: string;
   year: number;
   medium: string;

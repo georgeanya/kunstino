@@ -27,7 +27,7 @@ export default function ArtworkCard({ artwork }: ArtworkCardProps) {
           {artwork.title}, {artwork.year}
         </p>
         <p className="text-xs md:text-sm opacity-50 text-black">
-          {artwork.currency}{artwork.price.toLocaleString()}
+          {artwork.currency === 'EUR' ? '€' : artwork.currency}{artwork.price.toLocaleString()}
         </p>
       </div>
     </Link>

@@ -3,30 +3,61 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getFeaturedArtworks, getFeaturedArtists } from '@/lib/data';
+import { getArtworks, getArtists, transformArtworkFromAPI, transformArtistFromAPI } from '@/lib/api/artworks';
 import ArtworkCard from '@/components/ArtworkCard';
 import ArtistCard from '@/components/ArtistCard';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Artwork, Artist } from '@/lib/types';
 
 export default function HomePage() {
   const { t } = useLanguage();
-  const featuredArtworks = getFeaturedArtworks();
-  const featuredArtists = getFeaturedArtists();
-  
-  // Get two hero artworks (use the first two featured artworks)
-  const heroArtworks = featuredArtworks.slice(0, 2);
+  const [featuredArtworks, setFeaturedArtworks] = useState<Artwork[]>([]);
+  const [featuredArtists, setFeaturedArtists] = useState<Artist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   // State to track current hero image
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
+  // Fetch data on component mount
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        
+        // Fetch featured artworks
+        const artworksData = await getArtworks({ featured: true, limit: 8 });
+        const transformedArtworks: Artwork[] = artworksData.artworks.map(transformArtworkFromAPI);
+        
+        // Fetch artists
+        const artistsData = await getArtists();
+        const transformedArtists: Artist[] = artistsData.map((artist: any) => transformArtistFromAPI(artist));
+        const filteredFeaturedArtists = transformedArtists.filter(artist => artist.featured).slice(0, 8);
+        
+        setFeaturedArtworks(transformedArtworks);
+        setFeaturedArtists(filteredFeaturedArtists);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+        setError('Failed to load data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchData();
+  }, []);
+
+  // Get two hero artworks (use the first two featured artworks)
+  const heroArtworks = featuredArtworks.slice(0, 2);
+  
   // Auto-play functionality
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || heroArtworks.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentHeroIndex((prev) => (prev + 1) % heroArtworks.length);
-    }, 5000); // Change every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, heroArtworks.length]);
@@ -48,110 +79,108 @@ export default function HomePage() {
 
   const currentArtwork = heroArtworks[currentHeroIndex];
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+    <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
+  </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="flex items-center justify-center min-h-screen">
+        <div className="text-center text-red-600">{error}</div>
+      </main>
+    );
+  }
+
   return (
     <main>
-      {/* Hero Section */}
-      <section className="relative h-100 lg:h-125 bg-gray-100 overflow-hidden">
-        {/* Hero Images */}
-        {heroArtworks.map((artwork, index) => (
-          <div
-            key={artwork.id}
-            className={`absolute inset-0 transition-opacity duration-500 ${
-              index === currentHeroIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <Image
-              src={artwork.imageUrl}
-              alt={artwork.title}
-              fill
-              className="object-cover"
-              priority={index === 0}
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
-          </div>
-        ))}
-
-        {/* Hero Content */}
-        <div className="absolute bottom-6 left-4 lg:bottom-8 lg:left-25 text-white z-10">
-          <p className="text-xs lg:text-sm mb-2">{t.artMoment}</p>
-          <h1 className="text-2xl lg:text-3xl font-medium mb-1">
-            {currentArtwork.title}
-          </h1>
-          <p className="text-xs lg:text-sm opacity-90">
-            {currentArtwork.artistName} at {currentArtwork.year}
-          </p>
-        </div>
-      </section>
-
-      {/* Navigation Section */}
-      <section className="px-4 lg:px-25 pt-5">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1 flex items-center gap-2">
-            {heroArtworks.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToHero(index)}
-                className="flex-1 flex flex-col items-center"
-                aria-label={`Go to slide ${index + 1}`}
+      {/* Hero Section - Only show if we have hero artworks */}
+      {heroArtworks.length > 0 && (
+        <>
+          <section className="relative h-100 lg:h-125 bg-gray-100 overflow-hidden">
+            {/* Hero Images */}
+            {heroArtworks.map((artwork, index) => (
+              <div
+                key={artwork.id}
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                  index === currentHeroIndex ? 'opacity-100' : 'opacity-0'
+                }`}
               >
-                {/* Indicator line */}
-                <div className={`w-full h-px transition-colors duration-300 ${
-                  index === currentHeroIndex ? 'bg-black' : 'bg-gray-300'
-                }`} />
-              </button>
+                <Image
+                  src={artwork.imageUrl}
+                  alt={artwork.title}
+                  fill
+                  className="object-cover"
+                  priority={index === 0}
+                  sizes="100vw"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
+              </div>
             ))}
-          </div>
 
-          {/* Buttons - sticks to the right */}
-          <div className="flex gap-2 shrink-0">
-            <button
-              onClick={prevHero}
-              className="w-10 h-10 rounded-full bg-white border border-[#000000] hover:bg-gray-50 flex items-center justify-center transition-all duration-300 hover:scale-105"
-              aria-label="Previous slide"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={nextHero}
-              className="w-10 h-10 rounded-full bg-white border border-[#000000] hover:bg-gray-50 flex items-center justify-center transition-all duration-300 hover:scale-105"
-              aria-label="Next slide"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
+            {/* Hero Content */}
+            <div className="absolute bottom-6 left-4 lg:bottom-8 lg:left-25 text-white z-10">
+              <p className="text-xs lg:text-sm mb-2">{t.artMoment}</p>
+              <h1 className="text-2xl lg:text-3xl font-medium mb-1">
+                {currentArtwork.title}
+              </h1>
+              <p className="text-xs lg:text-sm opacity-90">
+                {currentArtwork.artistName} at {currentArtwork.year}
+              </p>
+            </div>
+          </section>
+
+          {/* Navigation Section */}
+          <section className="px-4 lg:px-25 pt-5">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1 flex items-center gap-2">
+                {heroArtworks.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToHero(index)}
+                    className="flex-1 flex flex-col items-center"
+                    aria-label={`Go to slide ${index + 1}`}
+                  >
+                    <div className={`w-full h-px transition-colors duration-300 ${
+                      index === currentHeroIndex ? 'bg-black' : 'bg-gray-300'
+                    }`} />
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex gap-2 shrink-0">
+                <button
+                  onClick={prevHero}
+                  className="w-10 h-10 rounded-full bg-white border border-[#000000] hover:bg-gray-50 flex items-center justify-center transition-all duration-300 hover:scale-105"
+                  aria-label="Previous slide"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={nextHero}
+                  className="w-10 h-10 rounded-full bg-white border border-[#000000] hover:bg-gray-50 flex items-center justify-center transition-all duration-300 hover:scale-105"
+                  aria-label="Next slide"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
 
       <div className="px-4 lg:px-25">
         {/* Artworks Section */}
         <section className="pt-10">
           <div className="flex justify-between items-center">
-            <h2 className="ttext-[22px] font-serif">{t.artworks}</h2>
+            <h2 className="text-[22px] font-serif">{t.artworks}</h2>
             <Link
               href="/artworks"
               className="text-xs lg:text-[16px] text-gray-600 hover:text-black transition-colors link-underline"
