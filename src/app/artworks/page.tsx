@@ -71,7 +71,7 @@ export default function ArtworksPage() {
         <div className="text-center text-red-600 py-10">{error}</div>
       ) : (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-16">
             {artworks.map((artwork) => (
               <ArtworkCard key={artwork.id} artwork={artwork} />
             ))}

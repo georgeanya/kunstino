@@ -6,6 +6,7 @@ export interface Artist {
   bio: string;
   imageUrl: string;
   featured: boolean;
+  slug: string;
 }
 
 export interface Artwork {
@@ -13,6 +14,7 @@ export interface Artwork {
   title: string;
   artistId?: any;
   artistName: string;
+  artistSlug: string;
   year: number;
   medium: string;
   dimensions: {
@@ -26,6 +28,7 @@ export interface Artwork {
   description: string;
   available: boolean;
   featured: boolean;
+  slug: string;
 }
 
 export interface CheckoutFormData {

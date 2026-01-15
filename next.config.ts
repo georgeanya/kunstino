@@ -4,6 +4,8 @@ const nextConfig = {
     domains: [
       "placehold.co",
       "kunstino-backend-production.up.railway.app",
+      "storage.googleapis.com",
+      "placehold.net",
       // Add other domains your images might come from
     ],
   },

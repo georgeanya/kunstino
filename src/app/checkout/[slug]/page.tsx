@@ -3,18 +3,17 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation'; // Changed from useSearchParams
+import { useParams, useRouter } from 'next/navigation';
 import { createUser, createOrder } from '@/lib/api/user';
-import { getArtworkById, transformArtworkFromAPI } from '@/lib/api/artworks';
-import { CheckoutFormData } from '@/lib/types';
+import { getArtworkBySlug, transformArtworkFromAPI } from '@/lib/api/artworks';
+import { CheckoutFormData, Artwork } from '@/lib/types';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Artwork } from '@/lib/types';
 
 export default function CheckoutPage() {
   const { t } = useLanguage();
-  const params = useParams(); // Get route parameters
-  const router = useRouter(); // For navigation
-  const artworkId = params?.id as string; // Get the id from route params
+  const params = useParams();
+  const router = useRouter();
+  const slug = params?.slug as string; // Changed from id to slug
   
   const [formData, setFormData] = useState<CheckoutFormData>({
     email: '',
@@ -37,7 +36,7 @@ export default function CheckoutPage() {
   // Fetch artwork data on component mount
   useEffect(() => {
     async function fetchArtwork() {
-      if (!artworkId) {
+      if (!slug) {
         setSubmitError('No artwork selected. Please go back and select an artwork.');
         setStep('form');
         return;
@@ -45,7 +44,7 @@ export default function CheckoutPage() {
 
       try {
         setStep('loading');
-        const apiArtwork = await getArtworkById(artworkId);
+        const apiArtwork = await getArtworkBySlug(slug);
         const transformedArtwork = transformArtworkFromAPI(apiArtwork);
         setArtwork(transformedArtwork);
         setStep('form');
@@ -57,7 +56,7 @@ export default function CheckoutPage() {
     }
 
     fetchArtwork();
-  }, [artworkId]);
+  }, [slug]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -117,7 +116,7 @@ export default function CheckoutPage() {
       const orderData = {
         customer_id: customerId,
         items: [{
-          artwork_id: artwork.id,
+          artwork_id: artwork.id, // Use artwork.id (MongoDB _id)
           quantity: 1
         }],
         payment_method: 'bank_transfer' as const,
@@ -158,8 +157,8 @@ export default function CheckoutPage() {
   // Spinner Loader Component
   const SpinnerLoader = () => (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
-    <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
-  </div>
+      <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
+    </div>
   );
 
   // Processing Step
@@ -375,12 +374,15 @@ export default function CheckoutPage() {
             <div className="bg-white rounded-lg mb-6">
               <div className="flex gap-4">
                 <div className="relative w-20 h-28 lg:w-24 lg:h-32 bg-gray-200 shrink-0 rounded overflow-hidden">
-                  <Image
-                    src={artwork.imageUrl || '/images/placeholder.jpg'}
-                    alt={artwork.title}
-                    fill
-                    className="object-cover"
-                  />
+                  {artwork.imageUrl && (
+                    <Image
+                      src={artwork.imageUrl}
+                      alt={artwork.title}
+                      fill
+                      className="object-cover"
+                      unoptimized={artwork.imageUrl.includes('storage.googleapis.com')}
+                    />
+                  )}
                 </div>
                 <div>
                   <h3 className="text-base mb-1">

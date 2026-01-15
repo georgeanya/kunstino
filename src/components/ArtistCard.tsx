@@ -9,10 +9,10 @@ interface ArtistCardProps {
 export default function ArtistCard({ artist }: ArtistCardProps) {
   return (
     <Link
-      href={`/artists/${artist.id}`}
+      href={`/artists/${artist.slug}`}
       className="group block"
     >
-      <div className="relative aspect-3/4 bg-gray-100 mb-3 overflow-hidden">
+      <div className="relative aspect-square bg-gray-100 mb-3 overflow-hidden">
         <Image
           src={artist.imageUrl}
           alt={artist.name}

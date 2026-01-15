@@ -1,28 +1,32 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getArtworkById, getArtworksByArtist, transformArtworkFromAPI } from '@/lib/api/artworks';
+import { getArtworkBySlug, getArtistBySlug, getArtworksByArtist, transformArtworkFromAPI } from '@/lib/api/artworks';
 import ArtworkCard from '@/components/ArtworkCard';
 
-// Generate static params if you're using static generation
-export async function generateStaticParams() {
-  // If you want to pre-render popular artworks, you can fetch them here
-  // For now, we'll let Next.js handle dynamic rendering
-  return [];
-}
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>; // Changed from id to slug
 }
 
 export default async function ArtworkDetailPage({ params }: PageProps) {
-  const { id } = await params;
+  const { slug } = await params;
   
   try {
-    // Fetch artwork details from API
-    const apiArtwork = await getArtworkById(id);
+    // Fetch artwork details by slug
+    const apiArtwork = await getArtworkBySlug(slug);
     const artwork = transformArtworkFromAPI(apiArtwork);
     
+    let artistSlug = '';
+    try {
+      
+      const artistResponse = await getArtistBySlug(artwork.artistId); // This might not work if you need artist ID
+     
+      artistSlug = artistResponse?.slug || '';
+    } catch (error) {
+      console.warn('Could not fetch artist slug:', error);
+    }
+
     // Fetch other artworks by the same artist
     const apiOtherArtworks = await getArtworksByArtist(artwork.artistId);
     const otherArtworks = apiOtherArtworks
@@ -40,7 +44,7 @@ export default async function ArtworkDetailPage({ params }: PageProps) {
         <div className="lg:grid lg:grid-cols-2 lg:gap-12 mb-12 lg:mb-20">
           {/* Image Gallery */}
           <div className="mb-6 lg:mb-0">
-            <div className="relative aspect-3/4 bg-gray-100">
+            <div className="relative aspect-square bg-gray-100">
               <Image
                 src={artwork.imageUrl}
                 alt={artwork.title}
@@ -54,8 +58,9 @@ export default async function ArtworkDetailPage({ params }: PageProps) {
 
           {/* Details */}
           <div>
+            {/* Use artist slug if available, otherwise fall back to ID */}
             <Link
-              href={`/artists/${artwork.artistId}`}
+              href={artistSlug ? `/artists/${artistSlug}` : `/artists/${artwork.artistId}`}
               className="text-[16px] lg:text-lg link-underline block mb-3"
             >
               {artwork.artistName}
@@ -79,8 +84,9 @@ export default async function ArtworkDetailPage({ params }: PageProps) {
               of estimated delivery time
             </p>
 
+            {/* Use artwork slug in checkout URL for better readability */}
             <Link
-              href={`/checkout/${artwork.id}`}  
+              href={artwork.available ? `/checkout/${artwork.slug}` : '#'}
               className={`block w-full text-center py-3 lg:py-4 rounded-[40px] mb-15 lg:mb-12 font-medium text-sm transition-colors ${
                 artwork.available 
                   ? 'bg-black text-white hover:bg-gray-800' 
@@ -100,36 +106,38 @@ export default async function ArtworkDetailPage({ params }: PageProps) {
               </p>
             </div>
 
-            {/* Additional Artwork Details */}
+            {/* Additional Artwork Details
             <div className="mt-8 pt-8 border-t border-gray-200">
               <h3 className="text-lg font-medium mb-4">Artwork Details</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-gray-600">Category</p>
-                  <p className="font-medium capitalize">{(apiArtwork as any).category || 'Not specified'}</p>
+                  <p className="font-medium capitalize">{apiArtwork.category || 'Not specified'}</p>
                 </div>
                 <div>
                   <p className="text-gray-600">Style</p>
                   <p className="font-medium">
-                    {Array.isArray((apiArtwork as any).style) 
-                      ? (apiArtwork as any).style.join(', ') 
+                    {Array.isArray(apiArtwork.style) 
+                      ? apiArtwork.style.join(', ') 
                       : 'Not specified'}
                   </p>
                 </div>
-                <div>
-                  <p className="text-gray-600">Certificate</p>
-                  <p className="font-medium">
-                    {(apiArtwork as any).has_certificate ? 'Includes certificate' : 'No certificate'}
-                  </p>
-                </div>
+
                 <div>
                   <p className="text-gray-600">Edition</p>
                   <p className="font-medium">
-                    {(apiArtwork as any).is_unique ? 'Unique piece' : 'Limited edition'}
+                    {apiArtwork.is_unique ? 'Unique piece' : 'Limited edition'}
                   </p>
                 </div>
+                
+                <div>
+                  <p className="text-gray-600">Status</p>
+                  <p className="font-medium capitalize">{apiArtwork.status}</p>
+                </div>
               </div>
-            </div>
+            </div> */}
+            
+           
           </div>
         </div>
 
@@ -142,7 +150,9 @@ export default async function ArtworkDetailPage({ params }: PageProps) {
             <hr className='my-5 opacity-20'/>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-16.75">
               {otherArtworks.map((art) => (
-                <ArtworkCard key={art.id} artwork={art} />
+                <Link key={art.id} href={`/artworks/${art.slug}`}>
+                  <ArtworkCard artwork={art} />
+                </Link>
               ))}
             </div>
           </section>

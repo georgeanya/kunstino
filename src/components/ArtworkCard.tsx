@@ -9,14 +9,14 @@ interface ArtworkCardProps {
 export default function ArtworkCard({ artwork }: ArtworkCardProps) {
   return (
     <Link
-      href={`/artworks/${artwork.id}`}
+      href={`/artworks/${artwork.slug}`}
       className="group block"
     >
-      <div className="relative aspect-3/4 bg-gray-100 mb-3 overflow-hidden">
+      <div className="relative aspect-square bg-gray-100 mb-3 overflow-hidden">
         <Image
           src={artwork.imageUrl}
           alt={artwork.title}
-          className="object-cover group-hover:opacity-90 transition-opacity duration-300"
+          className="object-fill group-hover:opacity-90 transition-opacity duration-300"
             width={260}
         height={260}
         />
