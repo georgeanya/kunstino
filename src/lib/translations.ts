@@ -56,6 +56,7 @@ export interface Translations {
   firstName: string;
   lastName: string;
   country: string;
+  phoneNumber: string;
   street: string;
   additionalStreet: string;
   city: string;
@@ -73,6 +74,7 @@ export interface Translations {
   bankName: string;
   accountName: string;
   accountNumber: string;
+  amount: string;
   paymentDeadline: string;
   contactHelp: string;
 
@@ -148,6 +150,7 @@ export const translations: Record<Language, Translations> = {
     firstName: "First name",
     lastName: "Last name",
     country: "Country",
+    phoneNumber: "Phone number",
     street: "Street",
     additionalStreet: "Additional street (optional)",
     city: "City",
@@ -166,6 +169,7 @@ export const translations: Record<Language, Translations> = {
     bankName: "Bank Name",
     accountName: "Account Name",
     accountNumber: "Account Number",
+    amount: "Amount",
     paymentDeadline:
       "Please ensure payment is completed within 48 hours to avoid order cancellation.",
     contactHelp: "Please, {contact} us if you need help or have any questions",
@@ -242,6 +246,7 @@ export const translations: Record<Language, Translations> = {
     firstName: "Vorname",
     lastName: "Nachname",
     country: "Land",
+    phoneNumber: "Telefonnummer",
     street: "Straße",
     additionalStreet: "Zusätzliche Straße (optional)",
     city: "Stadt",
@@ -260,6 +265,7 @@ export const translations: Record<Language, Translations> = {
     bankName: "Bankname",
     accountName: "Kontoinhaber",
     accountNumber: "Kontonummer",
+    amount: "Betrag",
     paymentDeadline:
       "Bitte stellen Sie sicher, dass die Zahlung innerhalb von 48 Stunden abgeschlossen wird, um eine Stornierung der Bestellung zu vermeiden.",
     contactHelp:

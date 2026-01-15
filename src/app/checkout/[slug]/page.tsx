@@ -19,7 +19,8 @@ export default function CheckoutPage() {
     email: '',
     firstName: '',
     lastName: '',
-    country: '',
+    country: 'Germany',
+    phoneNumber: '',
     street: '',
     additionalStreet: '',
     city: '',
@@ -177,62 +178,75 @@ export default function CheckoutPage() {
     </div>
   );
 
-  // Success Step
+  // Success Step - Updated to match your design
   const renderSuccessStep = () => (
-    <div className="text-center py-10">
-      <div className="mb-6">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h2 className="text-2xl font-semibold mb-2">Order Successful!</h2>
-        <p className="text-gray-600 mb-4">Thank you for your purchase.</p>
-        
-        <div className="max-w-md mx-auto bg-gray-50 p-6 rounded-lg mb-6">
-          <h3 className="font-semibold mb-3">Order Details</h3>
-          <div className="text-left space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Order ID:</span>
-              <span className="font-medium">{createdOrderId}</span>
+    <main className="flex items-center justify-center px-4">
+      <div className="max-w-md w-full">
+        <h1 className="text-2xl lg:text-[32px] font-serif mt-19 md:mt-0 text-center mb-8">
+          {t.thankYouOrder}
+        </h1>
+
+        <div className="bg-[#F2F2F2] p-5 rounded-lg mb-8 md:mb-10">
+          <div className="flex gap-4">
+            <div className="relative w-24 md:w-35 aspect-square bg-gray-200 shrink-0 rounded overflow-hidden">
+              {artwork?.imageUrl && (
+                <Image
+                  src={artwork.imageUrl}
+                  alt={artwork.title}
+                  fill
+                  className="object-cover"
+                />
+              )}
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Customer ID:</span>
-              <span className="font-medium">{createdUserId}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Artwork:</span>
-              <span className="font-medium">{artwork?.title}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Artist:</span>
-              <span className="font-medium">{artwork?.artistName}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Total Amount:</span>
-              <span className="font-medium">€{total.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Payment Method:</span>
-              <span className="font-medium">Bank Transfer</span>
+            <div>
+              <h3 className="mb-1 md:text-base text-sm">{artwork?.artistName}</h3>
+              <p className="md:text-base text-sm text-black font-light italic mb-4">
+                {artwork?.title}, {artwork?.year}
+              </p>
+              <p className="md:text-sm text-xs text-black font-light">{artwork?.medium}</p>
+              <p className="md:text-sm text-xs text-black font-light">
+                {artwork?.dimensions.width} × {artwork?.dimensions.height} {artwork?.dimensions.unit}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <button
-            onClick={() => router.push('/')}
-            className="bg-black text-white py-3 px-8 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Continue Shopping
-          </button>
-          <div>
-            <p className="text-sm text-gray-600 mb-2">A confirmation email has been sent to {formData.email}</p>
-            <p className="text-sm text-gray-600">Please check your inbox for order details.</p>
+        <div className="text-center mb-8">
+          <p className="text-sm md:text-base text-black mb-6">
+            {t.orderPlaced || 'Your order has been placed successfully!'}
+          </p>
+            <hr className='mb-6 mt-8 opacity-20'/>
+          <div className="bg-white text-left mb-6">
+            <ul className="space-y-2 text-sm md:text-base list-disc pl-5 md:pl-6">
+              <li>
+                <span className="font-medium">{t.bankName}:</span> Deutsche Bank
+              </li>
+              <li>
+                <span className="font-medium">{t.accountName}:</span> Kunstino UG
+              </li>
+              <li>
+                <span className="font-medium">{t.accountNumber}:</span> 3537783483
+              </li>
+              <li>
+                <span className="font-medium">{t.amount}:</span> {`€${total.toLocaleString()}`}
+              </li>
+            </ul>
           </div>
+            <hr className='my-6 md:mb-8 opacity-20'/>
+          <p className="text-sm md:text-base text-black">
+            {t.paymentDeadline || 'Please complete your payment within 48 hours.'}
+          </p>
+        </div>
+
+        <div className="text-center mt-10 md:mt-20 text-xs text-black">
+          {t.contactHelp?.split('{contact}')[0] || 'Need help?'}
+          <Link href="/contact" className="link-underline hover:text-black">
+            {t.contact || 'Contact us'}
+          </Link>
+          {t.contactHelp?.split('{contact}')[1] || ' for assistance.'}
         </div>
       </div>
-    </div>
+    </main>
   );
 
   // Form Step
@@ -297,20 +311,27 @@ export default function CheckoutPage() {
                 />
               </div>
 
-              <select
+               <input
+                type="tel"
+                name="phoneNumber"
+                placeholder={t.phoneNumber}
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-[#F0F0F0] text-black font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
+                required
+                disabled={isSubmitting}
+              />
+
+              <input
                 name="country"
-                value={formData.country}
+                value="Germany"
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-[#F0F0F0] text-black placeholder:text-gray-500 font-light rounded-[3px] focus:outline-none focus:ring-1 focus:ring-black text-sm"
                 required
                 disabled={isSubmitting}
-              >
-                <option value="">{t.country}</option>
-                <option value="Germany">{t.countries.germany}</option>
-                <option value="USA">{t.countries.usa}</option>
-                <option value="UK">{t.countries.uk}</option>
-                <option value="France">{t.countries.france}</option>
-              </select>
+              />
+                
+
 
               <input
                 type="text"
@@ -373,7 +394,7 @@ export default function CheckoutPage() {
           <div className='w-full max-w-112.5'>
             <div className="bg-white rounded-lg mb-6">
               <div className="flex gap-4">
-                <div className="relative w-20 h-28 lg:w-24 lg:h-32 bg-gray-200 shrink-0 rounded overflow-hidden">
+                <div className="relative w-24 md:w-35 aspect-square rounded overflow-hidden">
                   {artwork.imageUrl && (
                     <Image
                       src={artwork.imageUrl}
@@ -461,13 +482,17 @@ export default function CheckoutPage() {
 
   return (
     <main className="px-4 lg:px-25">
-      <h1 className="text-[22px] font-serif font-normal lg:text-[32px]">
-        {t.checkout} <span className="text-[16px] font-sans">&gt; {t.confirmation}</span>
-      </h1>
-      <hr className='my-5 opacity-20'/>
+      {step !== 'success' && (
+        <>
+          <h1 className="text-[22px] font-serif font-normal lg:text-[32px]">
+            {t.checkout} <span className="text-[16px] font-sans">&gt; {t.confirmation}</span>
+          </h1>
+          <hr className='my-5 opacity-20'/>
+        </>
+      )}
       
       {step === 'loading' && <SpinnerLoader />}
-      {step === 'processing' && renderProcessingStep()}
+      {step === 'processing' && <SpinnerLoader />}
       {step === 'success' && renderSuccessStep()}
       {step === 'form' && renderFormStep()}
     </main>

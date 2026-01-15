@@ -36,6 +36,7 @@ export interface CheckoutFormData {
   firstName: string;
   lastName: string;
   country: string;
+  phoneNumber: string;
   street: string;
   additionalStreet?: string;
   city: string;
