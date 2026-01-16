@@ -19,7 +19,7 @@ interface LanguageProviderProps {
 const defaultTranslations = translations.en;
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>('de');
   const [isLoading, setIsLoading] = useState(true);
 
   // Initialize language from localStorage on mount

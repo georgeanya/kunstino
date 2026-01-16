@@ -4,12 +4,12 @@ export interface Translations {
   // Common
   artworks: string;
   artists: string;
+  artwork: string;
   stories: string;
   search: string;
   searchPlaceholder: string;
   contact: string;
   born: string;
-  purchase: string;
   viewAll: string;
   viewAllWorks: string;
   viewAllArtists: string;
@@ -45,9 +45,11 @@ export interface Translations {
   // Artwork Details
   artistNote: string;
   taxesShipping: string;
-  otherArtworksByArtist: (artistName: string) => string;
+  otherArtworksByArtist: string;
   noArtworks: string;
-  artworksByArtist: (artistName: string) => string;
+  artworksByArtist: string;
+  purchase: string;
+  soldOut: string;
 
   // Checkout
   checkout: string;
@@ -76,7 +78,10 @@ export interface Translations {
   accountNumber: string;
   amount: string;
   paymentDeadline: string;
-  contactHelp: string;
+  contactHelp: {
+    beforeContact: string;
+    afterContact: string;
+  };
 
   // Footer
   footerDisclaimer: string;
@@ -97,6 +102,7 @@ export const translations: Record<Language, Translations> = {
     // Common
     artworks: "Artworks",
     artists: "Artists",
+    artwork: "Artwork",
     stories: "Stories",
     search: "Search",
     searchPlaceholder: "Search",
@@ -139,9 +145,11 @@ export const translations: Record<Language, Translations> = {
     artistNote: "Artist's note",
     taxesShipping:
       "Taxes and shipping included for delivery to Germany. 14 working days of estimated delivery time",
-    otherArtworksByArtist: (artistName) => `Other artworks by ${artistName}`,
+    otherArtworksByArtist: `Other artworks by`,
     noArtworks: "No artworks available at the moment.",
-    artworksByArtist: (artistName) => `Artworks by ${artistName}`,
+    artworksByArtist: `Artworks by`,
+    purchase: "Purchase",
+    soldOut: "Sold Out",
 
     // Checkout
     checkout: "Checkout",
@@ -172,7 +180,10 @@ export const translations: Record<Language, Translations> = {
     amount: "Amount",
     paymentDeadline:
       "Please ensure payment is completed within 48 hours to avoid order cancellation.",
-    contactHelp: "Please, {contact} us if you need help or have any questions",
+    contactHelp: {
+      beforeContact: "Please,",
+      afterContact: "us if you need help or have any questions",
+    },
 
     // Footer
     footerDisclaimer:
@@ -192,6 +203,7 @@ export const translations: Record<Language, Translations> = {
     // Common
     artworks: "Kunstwerke",
     artists: "Künstler",
+    artwork: "Kunstwerk",
     stories: "Geschichten",
     search: "Suchen",
     searchPlaceholder: "Suchen",
@@ -234,10 +246,11 @@ export const translations: Record<Language, Translations> = {
     artistNote: "Künstlernotiz",
     taxesShipping:
       "Steuern und Versand nach Deutschland inklusive. Geschätzte Lieferzeit: 14 Arbeitstage",
-    otherArtworksByArtist: (artistName) =>
-      `Weitere Kunstwerke von ${artistName}`,
+    otherArtworksByArtist: `Weitere Kunstwerke von`,
     noArtworks: "Derzeit sind keine Kunstwerke verfügbar.",
-    artworksByArtist: (artistName) => `Kunstwerke von ${artistName}`,
+    artworksByArtist: `Kunstwerke von`,
+    purchase: "Kaufen",
+    soldOut: "Ausverkauft",
 
     // Checkout
     checkout: "Kasse",
@@ -268,8 +281,10 @@ export const translations: Record<Language, Translations> = {
     amount: "Betrag",
     paymentDeadline:
       "Bitte stellen Sie sicher, dass die Zahlung innerhalb von 48 Stunden abgeschlossen wird, um eine Stornierung der Bestellung zu vermeiden.",
-    contactHelp:
-      "Bitte {contact} Sie uns, wenn Sie Hilfe benötigen oder Fragen haben",
+    contactHelp: {
+      beforeContact: "Bitte",
+      afterContact: "Sie uns, wenn Sie Hilfe benötigen oder Fragen haben",
+    },
 
     // Footer
     footerDisclaimer:

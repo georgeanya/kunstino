@@ -99,7 +99,8 @@ export default function HomePage() {
     <main>
       {/* Hero Section - Only show if we have hero artworks */}
       {heroArtworks.length > 0 && (
-        <>
+        <><Link 
+              href={`/artworks/${currentArtwork.slug}`}>
           <section className="relative h-100 lg:h-125 bg-gray-100 overflow-hidden">
             {/* Hero Images */}
             {heroArtworks.map((artwork, index) => (
@@ -132,6 +133,7 @@ export default function HomePage() {
               </p>
             </div>
           </section>
+          </Link>
 
           {/* Navigation Section */}
           <section className="px-4 lg:px-25 pt-5">

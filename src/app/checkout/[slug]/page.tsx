@@ -151,8 +151,8 @@ export default function CheckoutPage() {
 
   // Calculate totals
   const subtotal = artwork?.price || 0;
-  const shippingFee = 155;
-  const vat = 12;
+  const shippingFee = 10; // Fixed shipping fee
+  const vat = 0.19 * subtotal; // 19% VAT
   const total = subtotal + shippingFee + vat;
 
   // Spinner Loader Component
@@ -195,6 +195,13 @@ export default function CheckoutPage() {
                   alt={artwork.title}
                   fill
                   className="object-cover"
+                  style={{ 
+                  objectFit: 'contain',
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)'
+                }}
                 />
               )}
             </div>
@@ -402,6 +409,13 @@ export default function CheckoutPage() {
                       fill
                       className="object-cover"
                       unoptimized={artwork.imageUrl.includes('storage.googleapis.com')}
+                      style={{ 
+                      objectFit: 'contain',
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)'
+                    }}
                     />
                   )}
                 </div>
@@ -469,13 +483,7 @@ export default function CheckoutPage() {
           </button>
         </div>
 
-        <div className="text-center mt-8 lg:mt-12 text-xs text-gray-600">
-          {t.contactHelp.split('{contact}')[0]}
-          <Link href="/contact" className="link-underline hover:text-black">
-            {t.contact}
-          </Link>
-          {t.contactHelp.split('{contact}')[1]}
-        </div>
+        
       </>
     );
   };

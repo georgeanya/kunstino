@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
+import LayoutContent from './layoutContent';
 import { Inter } from 'next/font/google';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import './globals.css';
 
@@ -21,11 +20,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <LanguageProvider>
-          <Header />
-          {children}
-          <Footer />
+          <LayoutContent>{children}</LayoutContent>
         </LanguageProvider>
       </body>
     </html>
   );
 }
+
+// Separate client component for conditional rendering

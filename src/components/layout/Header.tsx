@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Language } from '@/lib/translations';
-import globe from '../../../public/icons/world.svg';
+
 import mail from '../../../public/icons/mail.svg';
 import search from '../../../public/icons/search.svg';
 import logo from '../../../public/assets/KUNSTiNO.svg';
@@ -19,9 +18,9 @@ export default function Header() {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   const navLinks = [
-    { href: '/artworks', label: t?.artworks || 'Artworks' },
-    { href: '/artists', label: t?.artists || 'Artists' },
-    { href: '/stories', label: t?.stories || 'Stories' },
+    { href: '/artworks', label: t?.artworks },
+    { href: '/artists', label: t?.artists },
+    { href: '/stories', label: t?.stories },
   ];
 
   const isActive = (href: string) => pathname.startsWith(href);
@@ -31,13 +30,15 @@ export default function Header() {
     console.log('Search:', searchQuery);
   };
 
-  // Handle language change for all browsers
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lang = e.target.value.toLowerCase();
-    if (lang === 'en' || lang === 'de') {
-      setLanguage(lang as Language);
-    }
+  // Toggle language between en and de
+  const toggleLanguage = () => {
+    const newLanguage = language === 'en' ? 'de' : 'en';
+    setLanguage(newLanguage);
   };
+
+  // Get current flag based on language
+  const getCurrentFlagEmoji = () => {
+  return language === 'en' ? '🇩🇪' : '🇬🇧';}
 
   const toggleSearch = () => {
     setShowMobileSearch(!showMobileSearch);
@@ -80,28 +81,12 @@ export default function Header() {
 
           {/* Safari-compatible language selector */}
           <div className="flex items-center relative">
-            <Image
-              src={globe}
-              alt="Language"
-              width={16}
-              height={16}
-              className="pointer-events-none absolute left-0 z-10"
-              quality={100}
-            />
-            <select
-              value={language.toUpperCase()}
-              onChange={handleLanguageChange}
-              className="appearance-none bg-transparent border-none text-xs font-light pl-5 pr-1 cursor-pointer focus:outline-none"
-              style={{ 
-                WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation',
-                minHeight: '44px',
-                minWidth: '44px',
-              }}
-            >
-              <option value="EN">EN</option>
-              <option value="DE">DE</option>
-            </select>
+            <button
+                onClick={toggleLanguage}
+                className="flex items-center transition-colors focus:outline-none"
+              >
+                <span className="text-2xl">{getCurrentFlagEmoji()}</span>
+              </button>
           </div>
         </div>
 
@@ -134,28 +119,18 @@ export default function Header() {
 
               {/* Safari-compatible language selector */}
               <div className="flex items-center relative">
-                <Image
-                  src={globe}
-                  alt="Language"
-                  width={16}
-                  height={16}
-                  className="pointer-events-none absolute left-0 z-10"
-                  quality={100}
-                />
-                <select
-                  value={language.toUpperCase()}
-                  onChange={handleLanguageChange}
-                  className="appearance-none bg-transparent border-none text-xs font-light pl-5 pr-1 cursor-pointer focus:outline-none"
-                  style={{ 
+                <button
+                onClick={toggleLanguage}
+                className="flex items-center focus:outline-none"
+                style={{ 
                     WebkitTapHighlightColor: 'transparent',
                     touchAction: 'manipulation',
                     minHeight: '44px',
                     minWidth: '44px',
                   }}
-                >
-                  <option value="EN">EN</option>
-                  <option value="DE">DE</option>
-                </select>
+              >
+                <span className="text-lg">{getCurrentFlagEmoji()}</span>
+              </button>
               </div>
             </div>
 
@@ -256,20 +231,12 @@ export default function Header() {
                 />
               </button>
               <div className="flex items-center gap-l-2">
-                <Image
-                  src={globe}
-                  alt="Language"
-                  width={16}
-                  height={16}
-                />
-                <select
-                  value={language.toUpperCase()}
-                  onChange={handleLanguageChange}
-                  className="text-sm font-light border-none bg-transparent cursor-pointer focus:outline-none"
-                >
-                  <option value="EN">EN</option>
-                  <option value="DE">DE</option>
-                </select>
+                <button
+                onClick={toggleLanguage}
+                className="flex items-center transition-colors focus:outline-none"
+              >
+                <span className="text-2xl">{getCurrentFlagEmoji()}</span>
+              </button>
               </div>
             </div>
           </div>

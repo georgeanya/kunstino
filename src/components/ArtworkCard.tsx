@@ -12,13 +12,20 @@ export default function ArtworkCard({ artwork }: ArtworkCardProps) {
       href={`/artworks/${artwork.slug}`}
       className="group block"
     >
-      <div className="relative aspect-square bg-gray-100 mb-3 overflow-hidden">
+      <div className="relative aspect-square bg-transparent mb-3 overflow-hidden">
         <Image
           src={artwork.imageUrl}
           alt={artwork.title}
-          className="object-fill group-hover:opacity-90 transition-opacity duration-300"
+          className="group-hover:opacity-90 transition-opacity duration-300"
             width={260}
         height={260}
+        style={{ 
+              objectFit: 'contain',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
         />
       </div>
       <div className="space-y-1">

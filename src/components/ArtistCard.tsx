@@ -19,6 +19,13 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
           className="object-cover group-hover:opacity-90 transition-opacity duration-300"
           width={260}
           height={260}
+          style={{ 
+              objectFit: 'contain',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
         />
       </div>
       <div className="space-y-1">
