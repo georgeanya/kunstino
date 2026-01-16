@@ -148,7 +148,6 @@ export const translations: Record<Language, Translations> = {
     otherArtworksByArtist: `Other artworks by`,
     noArtworks: "No artworks available at the moment.",
     artworksByArtist: `Artworks by`,
-    purchase: "Purchase",
     soldOut: "Sold Out",
 
     // Checkout
@@ -249,7 +248,6 @@ export const translations: Record<Language, Translations> = {
     otherArtworksByArtist: `Weitere Kunstwerke von`,
     noArtworks: "Derzeit sind keine Kunstwerke verfügbar.",
     artworksByArtist: `Kunstwerke von`,
-    purchase: "Kaufen",
     soldOut: "Ausverkauft",
 
     // Checkout
