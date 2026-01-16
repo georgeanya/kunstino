@@ -245,13 +245,7 @@ export default function CheckoutPage() {
           </p>
         </div>
 
-        <div className="text-center mt-10 md:mt-20 text-xs text-black">
-          {t.contactHelp?.split('{contact}')[0] || 'Need help?'}
-          <Link href="/contact" className="link-underline hover:text-black">
-            {t.contact || 'Contact us'}
-          </Link>
-          {t.contactHelp?.split('{contact}')[1] || ' for assistance.'}
-        </div>
+       
       </div>
     </main>
   );
