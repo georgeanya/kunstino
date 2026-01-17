@@ -3,6 +3,8 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import Image from 'next/image';
 import ArtworkCard from '@/components/ArtworkCard';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ArtistDetailContentProps {
   artist: any;
@@ -28,16 +30,9 @@ export default function ArtistDetailContent({ artist, artworks, apiArtist }: Art
             alt={artist.name}
             width={500}
             height={500}
-            className="object-cover"
+            className="object-cover md:min-w-80"
             priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            style={{ 
-              objectFit: 'contain',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)'
-            }}
           />
         </div>
 
@@ -55,7 +50,9 @@ export default function ArtistDetailContent({ artist, artworks, apiArtist }: Art
           {/* Bio */}
           {artist.bio && (
             <p className="text-sm leading-4.75 text-black mb-6">
-              {artist.bio}
+               <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {artist.bio}
+      </ReactMarkdown>
             </p>
           )}
           
@@ -67,7 +64,7 @@ export default function ArtistDetailContent({ artist, artworks, apiArtist }: Art
                   href={`https://instagram.com/${apiArtist.social_links.instagram.replace('@', '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block mr-4 text-sm text-blue-600 hover:underline"
+                  className="inline-block mr-4 text-sm text-blue-600 link-underline font-medium"
                 >
                   Instagram
                 </a>
@@ -77,7 +74,7 @@ export default function ArtistDetailContent({ artist, artworks, apiArtist }: Art
                   href={apiArtist.social_links.website.startsWith('http') ? apiArtist.social_links.website : `https://${apiArtist.social_links.website}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-sm text-blue-600 hover:underline"
+                  className="inline-block text-sm text-blue-600 link-underline font-medium"
                 >
                   Website
                 </a>

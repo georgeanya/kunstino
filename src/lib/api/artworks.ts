@@ -324,14 +324,22 @@ export function transformArtistFromAPI(apiArtist: any): Artist {
   }
 
   // Extract nationality from the API response
-  const nationality = apiArtist.nationality || "";
+  const nationality = apiArtist.nationality;
 
+  // Process bio for markdown - example with basic formatting
+  const bioMarkdown = apiArtist.bio
+    ? apiArtist.bio
+        .replace(/\n\n/g, "\n\n") // Keep double line breaks
+        .replace(/\*\*(.*?)\*\*/g, "**$1**") // Preserve bold
+        .replace(/\*(.*?)\*/g, "*$1*") // Preserve italics
+        .replace(/\[(.*?)\]\((.*?)\)/g, "[$1]($2)") // Preserve links
+    : "";
   return {
     id: apiArtist._id || "",
     name: `${apiArtist.first_name || ""} ${apiArtist.last_name || ""}`.trim(),
     nationality: nationality,
     birthYear: birthYear,
-    bio: apiArtist.bio || "",
+    bio: bioMarkdown || "",
     imageUrl: imageUrl,
     featured: apiArtist.verified || apiArtist.featured || false,
     slug: apiArtist.slug || "",
