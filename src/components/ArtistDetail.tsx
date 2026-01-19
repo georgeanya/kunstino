@@ -1,5 +1,4 @@
 'use client';
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import Image from 'next/image';
 import ArtworkCard from '@/components/ArtworkCard';
@@ -49,11 +48,11 @@ export default function ArtistDetailContent({ artist, artworks, apiArtist }: Art
           
           {/* Bio */}
           {artist.bio && (
-            <p className="text-sm leading-4.75 text-black mb-6">
+            <div className="text-sm leading-4.75 text-black mb-6">
                <ReactMarkdown remarkPlugins={[remarkGfm]}>
         {artist.bio}
       </ReactMarkdown>
-            </p>
+            </div>
           )}
           
           {/* Social Links */}

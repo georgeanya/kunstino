@@ -6,6 +6,8 @@ const nextConfig = {
       "kunstino-backend-production.up.railway.app",
       "storage.googleapis.com",
       "placehold.net",
+      "beyondthesinglestory.wordpress.com",
+      "latitudes.online",
       // Add other domains your images might come from
     ],
   },
