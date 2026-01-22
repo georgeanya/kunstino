@@ -6,8 +6,6 @@ import ArtworkCard from '@/components/ArtworkCard';
 import { fetchAllArtworks, searchArtworksClientSide, transformToArtworkType } from '@/lib/api/search';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-export const dynamic = 'force-dynamic';
-
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
@@ -17,7 +15,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
 
-  // Load all artworks on component mount
+  
   useEffect(() => {
     async function loadArtworks() {
       try {
@@ -77,8 +75,8 @@ export default function SearchPage() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-    <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
-  </div>
+        <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
+      </div>
     );
   }
 
