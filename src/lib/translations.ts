@@ -13,6 +13,7 @@ export interface Translations {
   viewAll: string;
   viewAllWorks: string;
   viewAllArtists: string;
+  viewAllStories: string;
   featured: string;
   available: string;
   sold: string;
@@ -24,6 +25,9 @@ export interface Translations {
   nationality: string;
   bio: string;
   description: string;
+  story: string;
+  relatedStories: string;
+  resultsFor: string;
 
   // Navigation
   home: string;
@@ -37,6 +41,7 @@ export interface Translations {
   artMoment: string;
   artistsCount: (count: number) => string;
   artworksCount: (count: number) => string;
+  storiesCount: (count: number) => string;
 
   // Pagination
   previous: string;
@@ -112,6 +117,7 @@ export const translations: Record<Language, Translations> = {
     viewAll: "View All",
     viewAllWorks: "View All Works",
     viewAllArtists: "View All Artists",
+    viewAllStories: "View All Stories",
     featured: "Featured",
     available: "Available",
     sold: "Sold",
@@ -123,6 +129,9 @@ export const translations: Record<Language, Translations> = {
     nationality: "Nationality",
     bio: "Biography",
     description: "Description",
+    story: "Story",
+    relatedStories: "Related Stories",
+    resultsFor: "Results for",
 
     // Navigation
     home: "Home",
@@ -136,6 +145,7 @@ export const translations: Record<Language, Translations> = {
     artMoment: "ART OF THE MOMENT",
     artistsCount: (count) => `${count} artists`,
     artworksCount: (count) => `${count} artworks`,
+    storiesCount: (count) => `${count} stories`,
 
     // Pagination
     previous: "Previous",
@@ -205,6 +215,7 @@ export const translations: Record<Language, Translations> = {
     artwork: "Kunstwerk",
     stories: "Geschichten",
     search: "Suchen",
+    story: "Geschichte",
     searchPlaceholder: "Suchen",
     contact: "Kontakt",
     born: "geb.",
@@ -212,6 +223,7 @@ export const translations: Record<Language, Translations> = {
     viewAll: "Alle anzeigen",
     viewAllWorks: "Alle Werke anzeigen",
     viewAllArtists: "Alle Künstler anzeigen",
+    viewAllStories: "Alle Geschichten anzeigen",
     featured: "Ausgewählt",
     available: "Verfügbar",
     sold: "Verkauft",
@@ -223,6 +235,8 @@ export const translations: Record<Language, Translations> = {
     nationality: "Nationalität",
     bio: "Biografie",
     description: "Beschreibung",
+    relatedStories: "Verwandte Geschichten",
+    resultsFor: "Ergebnisse für",
 
     // Navigation
     home: "Startseite",
@@ -236,6 +250,7 @@ export const translations: Record<Language, Translations> = {
     artMoment: "KUNST DES MOMENTS",
     artistsCount: (count) => `${count} Künstler`,
     artworksCount: (count) => `${count} Kunstwerke`,
+    storiesCount: (count) => `${count} Geschichten`,
 
     // Pagination
     previous: "Zurück",
@@ -287,7 +302,7 @@ export const translations: Record<Language, Translations> = {
     // Footer
     footerDisclaimer:
       "Wir glauben an die Kraft der Kunst, Räume zu verwandeln und Leben zu inspirieren. Unsere Plattform verbindet Kunstliebhaber mit aufstrebenden Talenten aus aller Welt.",
-    allRightsReserved: "© 2024 KUNSTiNO. Alle Rechte vorbehalten.",
+    allRightsReserved: "© 2025 KUNSTiNO. Alle Rechte vorbehalten.",
 
     // Countries
     countries: {

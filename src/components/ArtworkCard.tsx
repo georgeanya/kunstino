@@ -30,10 +30,10 @@ export default function ArtworkCard({ artwork }: ArtworkCardProps) {
       </div>
       <div className="space-y-1">
         <h3 className="font-semibold text-sm text-black">{artwork.artistName}</h3>
-        <p className="text-xs text-black italic">
+        <p className="text-xs md:text-sm text-black italic">
           {artwork.title}, {artwork.year}
         </p>
-        <p className="text-xs md:text-sm opacity-50 text-black">
+        <p className="text-xs  opacity-50 text-black">
           {artwork.currency === 'EUR' ? '€' : artwork.currency}{artwork.price.toLocaleString()}
         </p>
       </div>

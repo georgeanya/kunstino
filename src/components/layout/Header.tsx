@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -12,6 +12,7 @@ import Image from 'next/image';
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const { language, setLanguage, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,8 +28,20 @@ export default function Header() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Search:', searchQuery);
+    if (searchQuery.trim()) {
+      // Navigate to search results page with query parameter
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+      setMobileMenuOpen(false);
+      setShowMobileSearch(false);
+    }
   };
+
+  // Clear search when navigating away
+  useEffect(() => {
+    setSearchQuery('');
+    setShowMobileSearch(false);
+  }, [pathname]);
 
   // Toggle language between en and de
   const toggleLanguage = () => {
@@ -38,7 +51,8 @@ export default function Header() {
 
   // Get current flag based on language
   const getCurrentFlagEmoji = () => {
-  return language === 'en' ? '🇩🇪' : '🇬🇧';}
+    return language === 'en' ? '🇩🇪' : '🇬🇧';
+  };
 
   const toggleSearch = () => {
     setShowMobileSearch(!showMobileSearch);
@@ -135,11 +149,12 @@ export default function Header() {
             </div>
 
             <div className="px-4 py-4 overflow-y-auto" style={{ height: 'calc(100vh - 64px)' }}>
-              <div className='flex gap-4 justify-between w-full'>
-                <div className="w-full text-left flex items-center gap-2">
+              <form onSubmit={handleSearch} className="flex gap-4 mb-6">
+                <div className="flex-1 flex items-center">
                   <button 
                     onClick={toggleSearch}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
+                    className="p-2"
                   >
                     <Image
                       src={search}
@@ -149,19 +164,15 @@ export default function Header() {
                       quality={100}
                     />
                   </button>
+                  <input
+                    type="text"
+                    placeholder={t?.searchPlaceholder || 'Search artworks...'}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="flex-1 h-9 px-2 py-2 bg-[#F2F2F2] rounded-[3px] text-sm focus:outline-none focus:ring-1 focus:ring-black"
+                  />
                 </div>
-                <form onSubmit={handleSearch} className="">
-                  <button>
-                    <input
-                      type="text"
-                      placeholder={t?.searchPlaceholder || 'Search artworks, artists...'}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className={`w-67.5 h-9 px-2 py-2 bg-[#F2F2F2] rounded-[3px] text-sm ${showMobileSearch ? 'opacity-100' : 'opacity-0'} focus:outline-none focus:ring-1 focus:ring-black`}
-                    />
-                  </button>
-                </form>
-                <div className="w-full py-2 flex items-end justify-end">
+                <button type="submit" className="p-2">
                   <Image
                     src={mail}
                     alt="Mail"
@@ -169,9 +180,10 @@ export default function Header() {
                     height={20}
                     quality={100}
                   />
-                </div>
-              </div>
-              <nav className="space-y-8 mt-5">
+                </button>
+              </form>
+              
+              <nav className="space-y-8">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -202,9 +214,14 @@ export default function Header() {
                 </svg>
                 <input
                   type="text"
-                  placeholder={t?.search || 'Search artworks, artists...'}
+                  placeholder={t?.search || 'Search artworks...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch(e);
+                    }
+                  }}
                   className="h-9 w-45 pl-9 pr-4 py-2 bg-[#F2F2F2] border-none rounded-[3px] text-sm text-[#000000] focus:outline-none focus:ring-1 placeholder:text-[#000000] placeholder:font-light placeholder:text-xs"
                 />
               </form>

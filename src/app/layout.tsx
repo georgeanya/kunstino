@@ -27,4 +27,3 @@ export default function RootLayout({
   );
 }
 
-// Separate client component for conditional rendering

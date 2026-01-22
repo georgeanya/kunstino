@@ -3,16 +3,18 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getArtworks, getArtists, transformArtworkFromAPI, transformArtistFromAPI } from '@/lib/api/artworks';
+import { getArtworks, getArtists, getFeaturedStories, transformArtworkFromAPI, transformArtistFromAPI, transformStoryFromAPI } from '@/lib/api/artworks';
 import ArtworkCard from '@/components/ArtworkCard';
 import ArtistCard from '@/components/ArtistCard';
+import StoryCard from '@/components/StoryCard';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Artwork, Artist } from '@/lib/types';
+import { Artwork, Artist, Story } from '@/lib/types';
 
 export default function HomePage() {
   const { t } = useLanguage();
   const [featuredArtworks, setFeaturedArtworks] = useState<Artwork[]>([]);
   const [featuredArtists, setFeaturedArtists] = useState<Artist[]>([]);
+  const [featuredStories, setFeaturedStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -35,8 +37,13 @@ export default function HomePage() {
         const transformedArtists: Artist[] = artistsData.map((artist: any) => transformArtistFromAPI(artist));
         const filteredFeaturedArtists = transformedArtists.filter(artist => artist.featured).slice(0, 8);
         
+        // Fetch featured stories
+        const storiesData = await getFeaturedStories();
+        const transformedStories: Story[] = storiesData.map((story: any) => transformStoryFromAPI(story));
+        
         setFeaturedArtworks(transformedArtworks);
         setFeaturedArtists(filteredFeaturedArtists);
+        setFeaturedStories(transformedStories);
       } catch (err) {
         console.error('Failed to fetch data:', err);
         setError('Failed to load data. Please try again later.');
@@ -82,8 +89,8 @@ export default function HomePage() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-    <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
-  </div>
+        <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
+      </div>
     );
   }
 
@@ -192,15 +199,15 @@ export default function HomePage() {
           </div>
           <hr className='my-5 opacity-20'/>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-16">
-            {featuredArtworks.slice(0, 8).map((artwork) => (
+            {featuredArtworks.slice(0, 4).map((artwork) => (
               <ArtworkCard key={artwork.id} artwork={artwork} />
             ))}
           </div>
         </section>
 
         {/* Artists Section */}
-        <section className="pt-15 pb-20">
-          <div className="flex justify-between items-center mb-6 lg:mb-8">
+        <section className="pt-15">
+          <div className="flex justify-between items-center">
             <h2 className="text-[22px] font-serif">{t.artists}</h2>
             <Link
               href="/artists"
@@ -211,10 +218,35 @@ export default function HomePage() {
           </div>
           <hr className='my-5 opacity-20'/>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-16">
-            {featuredArtists.slice(0, 8).map((artist) => (
+            {featuredArtists.slice(0, 4).map((artist) => (
               <ArtistCard key={artist.id} artist={artist} />
             ))}
           </div>
+        </section>
+
+        {/* Stories Section - Similar to Artists and Artworks sections */}
+        <section className="pt-15 pb-20">
+          <div className="flex justify-between items-center">
+            <h2 className="text-[22px] font-serif">{t.stories}</h2>
+            <Link
+              href="/stories"
+              className="text-xs lg:text-[16px] text-gray-600 hover:text-black transition-colors link-underline"
+            >
+              {t.viewAllStories}
+            </Link>
+          </div>
+          <hr className='my-5 opacity-20'/>
+          {featuredStories.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-16">
+              {featuredStories.slice(0, 4).map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 text-gray-500">
+              No stories available at the moment.
+            </div>
+          )}
         </section>
       </div>
     </main>

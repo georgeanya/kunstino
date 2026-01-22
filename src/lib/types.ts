@@ -31,6 +31,35 @@ export interface Artwork {
   slug: string;
 }
 
+export interface Story {
+  featuredImage: {
+    url: string;
+    alt: string;
+    caption: string;
+    credits: string;
+  };
+  id: string;
+  title: string;
+  slug: string;
+  tags: Array<{
+    _id: string;
+    name: string;
+    slug: string;
+  }>;
+  author: {
+    id: string;
+    name: string;
+  };
+  content: string;
+  excerpt: string;
+  status: string;
+  publishedAt: string;
+  publishedDate: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+}
+
 export interface CheckoutFormData {
   email: string;
   firstName: string;

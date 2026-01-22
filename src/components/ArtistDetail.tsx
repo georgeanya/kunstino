@@ -48,8 +48,9 @@ export default function ArtistDetailContent({ artist, artworks, apiArtist }: Art
           
           {/* Bio */}
           {artist.bio && (
-            <div className="text-sm leading-4.75 text-black mb-6">
-               <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <div className="reactMarkDown text-black mb-6">
+               <ReactMarkdown remarkPlugins={[remarkGfm]}
+               >
         {artist.bio}
       </ReactMarkdown>
             </div>

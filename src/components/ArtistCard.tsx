@@ -30,7 +30,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
       </div>
       <div className="space-y-1">
         <h3 className="font-medium text-sm text-black">{artist.name}</h3>
-        <p className="text-xs md:text-sm  text-black">
+        <p className="text-xs text-black">
           {artist.nationality}, b. {artist.birthYear}
         </p>
       </div>

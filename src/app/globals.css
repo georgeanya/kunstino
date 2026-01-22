@@ -25,3 +25,100 @@ a {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+.reactMarkDown {
+  color: black;
+}
+.reactMarkDown ol {
+  list-style-type: decimal;
+  font-size: 14px;
+  margin-bottom: 30px;
+  line-height: 19px;
+  padding-left: 2rem;
+}
+
+.reactMarkDown ul {
+  list-style-type: disc;
+  font-size: 14px;
+  margin-bottom: 30px;
+  line-height: 19px;
+  padding-left: 2rem;
+}
+
+.reactMarkDown li {
+  margin-top: 6px;
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+.reactMarkDown h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.reactMarkDown h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.reactMarkDown p {
+  font-size: 14px;
+  margin-bottom: 30px;
+  line-height: 19px;
+}
+.reactMarkDown a {
+  font-weight: 600;
+}
+.reactMarkDown img {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+.reactMarkDown iframe {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .reactMarkDown h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    line-height: 28px;
+  }
+  .reactMarkDown h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .reactMarkDown p {
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.6rem;
+  }
+  .reactMarkDown a {
+    font-weight: 600;
+  }
+  .reactMarkDown img {
+    margin-top: 5px;
+    margin-bottom: 30px;
+    width: 100%;
+  }
+  .reactMarkDown iframe {
+    margin-top: 5px;
+    margin-bottom: 30px;
+    width: 100%;
+  }
+  .reactMarkDown ol {
+    list-style-type: decimal;
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.6rem;
+    padding-left: 2rem;
+  }
+
+  .reactMarkDown ul {
+    list-style-type: disc;
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.6rem;
+    padding-left: 2rem;
+  }
+}

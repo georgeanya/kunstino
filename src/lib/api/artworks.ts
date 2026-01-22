@@ -1,4 +1,4 @@
-import { Artwork, Artist } from "@/lib/types";
+import { Artwork, Artist, Story } from "@/lib/types";
 
 const API_BASE_URL = "https://kunstino-backend-production.up.railway.app/v1";
 
@@ -99,11 +99,77 @@ interface ArtistArtworksResponse {
   current_page: number;
 }
 
-// Update getArtistBySlug to match your API response
+// Story interfaces
+interface StoryApiResponse {
+  featured_image: {
+    url: string;
+    alt: string;
+    caption: string;
+    credits: string;
+  };
+  _id: string;
+  title: string;
+  slug: string;
+  tags: Array<{
+    _id: string;
+    name: string;
+    slug: string;
+  }>;
+  author: {
+    _id: string;
+    first_name: string;
+    last_name: string;
+  };
+  content: string;
+  excerpt: string;
+  status: string;
+  published_at: string;
+  meta_title: string;
+  meta_description: string;
+  keywords: string[];
+  __v: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface StoriesListApiResponse {
+  data: StoryApiResponse[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+interface SingleStoryApiResponse {
+  story: StoryApiResponse;
+  related: Array<{
+    featured_image: {
+      url: string;
+      alt: string;
+      caption: string;
+      credits: string;
+    };
+    _id: string;
+    title: string;
+    slug: string;
+    tags: Array<{
+      _id: string;
+      name: string;
+      slug: string;
+    }>;
+    author: {
+      _id: string;
+      first_name: string;
+      last_name: string;
+    };
+    excerpt: string;
+    published_at: string;
+  }>;
+}
+
 export async function getArtistBySlug(slug: string) {
   try {
     const response = await fetch(`${API_BASE_URL}/artist/${slug}`, {
-      cache: "no-store",
+      next: { revalidate: 3600 }, // Revalidate every hour
     });
 
     if (!response.ok) {
@@ -116,7 +182,7 @@ export async function getArtistBySlug(slug: string) {
       throw new Error(data.message || "Failed to fetch artist");
     }
 
-    return data.data; // Return the artist data from API response
+    return data.data;
   } catch (error) {
     console.error("Error fetching artist:", error);
     throw error;
@@ -124,16 +190,16 @@ export async function getArtistBySlug(slug: string) {
 }
 
 export async function getArtworkBySlug(
-  slug: string
+  slug: string,
 ): Promise<ArtworkDetailResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/artwork/${slug}`, {
-      cache: "force-cache",
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch artwork by slug: ${response.statusText}`
+        `Failed to fetch artwork by slug: ${response.statusText}`,
       );
     }
 
@@ -152,19 +218,19 @@ export async function getArtworkBySlug(
 
 // New function: Get artworks by artist
 export async function getArtworksByArtist(
-  artistId: string
+  artistId: string,
 ): Promise<ArtworkDetailResponse[]> {
   try {
     const response = await fetch(
       `${API_BASE_URL}/artist/${artistId}/artworks`,
       {
-        cache: "force-cache",
-      }
+        next: { revalidate: 3600 },
+      },
     );
 
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch artist artworks: ${response.statusText}`
+        `Failed to fetch artist artworks: ${response.statusText}`,
       );
     }
 
@@ -275,6 +341,110 @@ export async function getArtistById(id: string) {
   }
 }
 
+// Get all stories with pagination
+export async function getStories(params?: {
+  page?: number;
+  limit?: number;
+}): Promise<{
+  stories: StoryApiResponse[];
+  pagination: {
+    totalPages: number;
+    currentPage: number;
+    totalItems: number;
+  };
+}> {
+  try {
+    const { page = 1, limit = 10 } = params || {};
+
+    // Build query string with pagination
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    const response = await fetch(`${API_BASE_URL}/story?${queryParams}`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch stories: ${response.statusText}`);
+    }
+
+    const data: ApiResponse<StoriesListApiResponse> = await response.json();
+
+    if (data.status !== "Success") {
+      throw new Error(data.message || "Failed to fetch stories");
+    }
+
+    const storiesData = data.data;
+    const totalPages = Math.ceil(storiesData.total / storiesData.limit);
+
+    return {
+      stories: storiesData.data || [],
+      pagination: {
+        totalPages: totalPages,
+        currentPage: storiesData.page,
+        totalItems: storiesData.total,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    throw error;
+  }
+}
+
+// Get single story by slug
+export async function getStoryBySlug(slug: string): Promise<{
+  story: StoryApiResponse;
+  related: SingleStoryApiResponse["related"];
+}> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/story/${slug}`, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch story: ${response.statusText}`);
+    }
+
+    const data: ApiResponse<SingleStoryApiResponse> = await response.json();
+
+    if (data.status !== "Success") {
+      throw new Error(data.message || "Failed to fetch story");
+    }
+
+    return {
+      story: data.data.story,
+      related: data.data.related || [],
+    };
+  } catch (error) {
+    console.error("Error fetching story:", error);
+    throw error;
+  }
+}
+
+// Get featured stories
+export async function getFeaturedStories(): Promise<StoryApiResponse[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/story`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch featured stories: ${response.statusText}`,
+      );
+    }
+
+    const data: ApiResponse<StoriesListApiResponse> = await response.json();
+
+    return data.data.data || [];
+  } catch (error) {
+    console.error("Error fetching featured stories:", error);
+    throw error;
+  }
+}
+
 export function transformArtworkFromAPI(apiArtwork: any): Artwork {
   // Get the primary image URL or fall back to the first image
   const imageUrl =
@@ -285,8 +455,8 @@ export function transformArtworkFromAPI(apiArtwork: any): Artwork {
   return {
     id: apiArtwork._id || "",
     title: apiArtwork.title || "",
-    artistId: apiArtwork.artist || "", // Keep this as artist ID (for API calls)
-    artistSlug: apiArtwork.artist_slug || "", // Add separate field for artist slug
+    artistId: apiArtwork.artist || "",
+    artistSlug: apiArtwork.artist_slug || "",
     artistName: apiArtwork.artist_name || "",
     year: apiArtwork.year_created || 0,
     medium: apiArtwork.medium || "",
@@ -326,22 +496,117 @@ export function transformArtistFromAPI(apiArtist: any): Artist {
   // Extract nationality from the API response
   const nationality = apiArtist.nationality;
 
-  // Process bio for markdown - example with basic formatting
-  const bioMarkdown = apiArtist.bio
-    ? apiArtist.bio
-        .replace(/\n\n/g, "\n\n") // Keep double line breaks
-        .replace(/\*\*(.*?)\*\*/g, "**$1**") // Preserve bold
-        .replace(/\*(.*?)\*/g, "*$1*") // Preserve italics
-        .replace(/\[(.*?)\]\((.*?)\)/g, "[$1]($2)") // Preserve links
-    : "";
   return {
     id: apiArtist._id || "",
     name: `${apiArtist.first_name || ""} ${apiArtist.last_name || ""}`.trim(),
     nationality: nationality,
     birthYear: birthYear,
-    bio: bioMarkdown || "",
+    bio: apiArtist.bio,
     imageUrl: imageUrl,
     featured: apiArtist.verified || apiArtist.featured || false,
     slug: apiArtist.slug || "",
+  };
+}
+
+// Transform story from API response
+export function transformStoryFromAPI(apiStory: any): Story {
+  // Extract tag names for easier use
+  const tags = apiStory.tags?.map((tag: any) => tag.name) || [];
+
+  // Format author name
+  const authorName = apiStory.author
+    ? `${apiStory.author.first_name || ""} ${apiStory.author.last_name || ""}`.trim()
+    : "";
+
+  // Format published date
+  let publishedDate = "";
+  if (apiStory.published_at) {
+    try {
+      const date = new Date(apiStory.published_at);
+      publishedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      console.error("Error parsing published date:", error);
+    }
+  }
+
+  return {
+    id: apiStory._id || "",
+    title: apiStory.title || "",
+    slug: apiStory.slug || "",
+    excerpt: apiStory.excerpt || "",
+    content: apiStory.content || "",
+    featuredImage: {
+      url: apiStory.featured_image?.url || "",
+      alt: apiStory.featured_image?.alt || "",
+      caption: apiStory.featured_image?.caption || "",
+      credits: apiStory.featured_image?.credits || "",
+    },
+    author: {
+      id: apiStory.author?._id || "",
+      name: authorName,
+    },
+    tags: tags,
+    publishedAt: apiStory.published_at || "",
+    publishedDate: publishedDate,
+    metaTitle: apiStory.meta_title || "",
+    metaDescription: apiStory.meta_description || "",
+    keywords: apiStory.keywords || [],
+    status: apiStory.status || "draft",
+  };
+}
+
+// Transform related story from API response (lightweight version)
+export function transformRelatedStoryFromAPI(apiStory: any): Story {
+  // Extract tag names for easier use
+  const tags = apiStory.tags?.map((tag: any) => tag.name) || [];
+
+  // Format author name
+  const authorName = apiStory.author
+    ? `${apiStory.author.first_name || ""} ${apiStory.author.last_name || ""}`.trim()
+    : "";
+
+  // Format published date
+  let publishedDate = "";
+  if (apiStory.published_at) {
+    try {
+      const date = new Date(apiStory.published_at);
+      publishedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      console.error("Error parsing published date:", error);
+    }
+  }
+
+  return {
+    id: apiStory._id || "",
+    title: apiStory.title || "",
+    slug: apiStory.slug || "",
+    excerpt: apiStory.excerpt || "",
+    featuredImage: {
+      url: apiStory.featured_image?.url || "",
+      alt: apiStory.featured_image?.alt || "",
+      caption: apiStory.featured_image?.caption || "",
+      credits: apiStory.featured_image?.credits || "",
+    },
+    author: {
+      id: apiStory.author?._id || "",
+      name: authorName,
+    },
+    tags: tags,
+    publishedAt: apiStory.published_at || "",
+    publishedDate: publishedDate,
+    // These fields might not be present in related stories response
+    content: "",
+    metaTitle: "",
+    metaDescription: "",
+    keywords: [],
+    status: "published",
   };
 }
